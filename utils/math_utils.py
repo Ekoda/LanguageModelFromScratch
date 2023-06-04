@@ -35,3 +35,23 @@ def tanh_derivative(tanh_output: float) -> float:
         float: The derivative of the tanh function at the corresponding input.
     """
     return 1 - tanh_output ** 2
+
+def softmax(x: np.ndarray, axis=-1) -> np.ndarray:
+    """
+    Compute the softmax of each element along an axis of a numpy array.
+
+    Parameters
+    ----------
+    x : np.ndarray
+        Input array.
+    axis : int, optional
+        Axis along which the softmax normalization is applied. The default is -1.
+
+    Returns
+    -------
+    np.ndarray
+        The array with softmax applied elementwise along the specified axis.
+
+    """
+    e_x = np.exp(x - np.max(x, axis=axis, keepdims=True))
+    return e_x / e_x.sum(axis=axis, keepdims=True)

@@ -4,9 +4,10 @@ from utils.math_utils import sigmoid_activation, sigmoid_derivative, tanh_activa
 
 
 class Neuron:
-    def __init__(self, n_inputs: int = 1, activation: str = 'tanh'):
+    def __init__(self, n_inputs: int = 1, activation: str = 'tanh', include_bias: bool = True):
         self.w: np.ndarray = np.random.randn(n_inputs) * 0.1
-        self.b: float = np.random.randn() * 0.1
+        self.b: float = np.random.randn() * 0.1 if include_bias else 0
+        self.include_bias: bool = include_bias
         self.activation_type: str = activation
         self.gradient: float = 0
         self.w_gradients: np.ndarray = np.zeros(n_inputs)
@@ -35,17 +36,19 @@ class Neuron:
 
     def update_parameters(self, learning_rate: float) -> None:
         self.w -= learning_rate * self.w_gradients
-        self.b -= learning_rate * self.gradient
+        if self.include_bias:
+            self.b -= learning_rate * self.gradient
 
     def forward(self, X: np.ndarray) -> float:
         output = self.activation(np.dot(self.w, X) + self.b)
         self.inputs, self.output = X, output
         return output
 
+
 class NeuronLayer:
-    def __init__(self, size: int, n_inputs: int = 1, activation: str = 'tanh'):
+    def __init__(self, size: int, n_inputs: int = 1, activation: str = 'tanh', include_bias: bool = True):
         self.n_neurons = size
-        self.neurons = [Neuron(n_inputs, activation) for _ in range(size)]
+        self.neurons = [Neuron(n_inputs, activation, include_bias) for _ in range(size)]
 
     def train(self, upstream_gradients: list, learning_rate: float):
         for neuron, upstream_gradient in zip(self.neurons, upstream_gradients):
