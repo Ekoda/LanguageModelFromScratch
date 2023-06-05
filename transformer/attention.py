@@ -10,7 +10,11 @@ class MultiHeadAttention:
         self.linear_layer = NeuronLayer(embedding_size, embedding_size, activation='linear', include_bias=False)
 
     def forward(self, X: np.ndarray) -> np.ndarray:
-        pass
+        embedding_split = np.split(X, self.n_heads, axis=-1)
+        head_outputs = [head.forward(embedding_portion) for head, embedding_portion in zip(self.heads, embedding_split)]
+        concat = np.concatenate(head_outputs, axis=-1)
+        linear_transformation = np.array([self.linear_layer.forward(embedding) for embedding in concat])
+        return linear_transformation
 
 
 class Head:
@@ -20,13 +24,10 @@ class Head:
         self.key_layer = NeuronLayer(size, size, activation='linear', include_bias=False)
         self.value_layer = NeuronLayer(size, size, activation='linear', include_bias=False)
 
-
     def forward(self, X: np.ndarray) -> np.ndarray:
         queries = np.array([self.query_layer.forward(embedding) for embedding in X]) # T, C 
         keys = np.array([self.key_layer.forward(embedding) for embedding in X]) # T, C
         values = np.array([self.value_layer.forward(embedding) for embedding in X]) # T, C
-        
         scores = softmax(np.matmul(queries, keys.T) / np.sqrt(self.size), axis=-1) # T, T
         weighted_values = np.matmul(scores, values) # T, C
-
         return weighted_values

@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def sigmoid_activation(n: float) -> float:
     return 1 / (1 + np.exp(-n))
 
