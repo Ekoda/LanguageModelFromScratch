@@ -65,6 +65,7 @@ class NeuronLayer:
     def forward(self, X: np.ndarray) -> np.ndarray:
         return np.array([neuron.forward(X) for neuron in self.neurons])
 
+
 class  FeedForwardNetwork:
     def __init__ (self, input_size: int, size: int = None):
         self.input_size: int = input_size
@@ -79,32 +80,3 @@ class  FeedForwardNetwork:
         layer1_output = self.layer1.forward(X)
         layer2_output = self.layer2.forward(layer1_output)
         return layer2_output
-
-
-class LayerNorm:
-    def __init__ (self, size: int):
-        self.size: int = size
-        self.gamma: np.ndarray = np.ones(size)
-        self.beta: np.ndarray = np.zeros(size)
-        self.gamma_gradients: np.ndarray = np.zeros(size)
-        self.beta_gradients: np.ndarray = np.zeros(size)
-        self.epsilon: float = 1e-6
-        self.normalized_input: Optional[np.ndarray] = None
-
-    def compute_gradients(self, upstream_gradients: list) -> None:
-        self.gamma_gradients = np.sum(upstream_gradients * self.normalized_input, axis=0)
-        self.beta_gradients = np.sum(upstream_gradients, axis=0)
-
-    def update_parameters(self, learning_rate: float) -> None:
-        self.gamma -= learning_rate * self.gamma_gradients
-        self.beta -= learning_rate * self.beta_gradients
-
-    def train(self, upstream_gradients: list, learning_rate: float) -> None:
-        self.compute_gradients(upstream_gradients)
-        self.update_parameters(learning_rate)
-    
-    def forward(self, X: np.ndarray) -> np.ndarray:
-        mean = np.mean(X, axis=-1, keepdims=True)
-        variance = np.var(X, axis=-1, keepdims=True)
-        self.normalized_input = (X - mean) / np.sqrt(variance + self.epsilon)
-        return self.gamma * self.normalized_input + self.beta
