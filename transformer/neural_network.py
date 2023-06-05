@@ -65,6 +65,21 @@ class NeuronLayer:
     def forward(self, X: np.ndarray) -> np.ndarray:
         return np.array([neuron.forward(X) for neuron in self.neurons])
 
+class  FeedForwardNetwork:
+    def __init__ (self, input_size: int, size: int = None):
+        self.input_size: int = input_size
+        self.size: int = input_size * 4 if size is None else size
+        self.layer1 = NeuronLayer(self.size, input_size, activation='relu')
+        self.layer2 = NeuronLayer(input_size, self.size, activation='linear')
+
+    def train(self, upstream_gradients: list, learning_rate: float) -> None:
+        pass
+    
+    def forward(self, X: np.ndarray) -> np.ndarray:
+        layer1_output = self.layer1.forward(X)
+        layer2_output = self.layer2.forward(layer1_output)
+        return layer2_output
+
 
 class LayerNorm:
     def __init__ (self, size: int):
