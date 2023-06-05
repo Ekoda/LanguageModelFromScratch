@@ -1,6 +1,6 @@
 import numpy as np
 from typing import Union, Optional
-from utils.math_utils import sigmoid_activation, sigmoid_derivative, tanh_activation, tanh_derivative
+from utils.math_utils import sigmoid_activation, sigmoid_derivative, tanh_activation, tanh_derivative, relu_activation, relu_derivative
 
 
 class Neuron:
@@ -19,6 +19,8 @@ class Neuron:
             return sigmoid_activation(n)
         elif self.activation_type == 'tanh':
             return np.tanh(n)
+        elif self.activation_type == 'relu': 
+            return relu_activation(n)
         elif self.activation_type == 'linear':
             return n
 
@@ -27,6 +29,8 @@ class Neuron:
             return sigmoid_derivative(self.output)
         elif self.activation_type == 'tanh':
             return tanh_derivative(self.output)
+        elif self.activation_type == 'relu':
+            return relu_derivative(self.output)
         elif self.activation_type == 'linear':
             return 1
         
@@ -38,6 +42,10 @@ class Neuron:
         self.w -= learning_rate * self.w_gradients
         if self.include_bias:
             self.b -= learning_rate * self.gradient
+
+    def train (self, upstream_gradient: float, learning_rate: float) -> None:
+        self.compute_gradients(upstream_gradient)
+        self.update_parameters(learning_rate)
 
     def forward(self, X: np.ndarray) -> float:
         output = self.activation(np.dot(self.w, X) + self.b)
@@ -52,8 +60,36 @@ class NeuronLayer:
 
     def train(self, upstream_gradients: list, learning_rate: float):
         for neuron, upstream_gradient in zip(self.neurons, upstream_gradients):
-            neuron.compute_gradients(upstream_gradient)
-            neuron.update_parameters(learning_rate)
+            neuron.train(upstream_gradient, learning_rate)
 
     def forward(self, X: np.ndarray) -> np.ndarray:
         return np.array([neuron.forward(X) for neuron in self.neurons])
+
+
+class LayerNorm:
+    def __init__ (self, size: int):
+        self.size: int = size
+        self.gamma: np.ndarray = np.ones(size)
+        self.beta: np.ndarray = np.zeros(size)
+        self.gamma_gradients: np.ndarray = np.zeros(size)
+        self.beta_gradients: np.ndarray = np.zeros(size)
+        self.epsilon: float = 1e-6
+        self.normalized_input: Optional[np.ndarray] = None
+
+    def compute_gradients(self, upstream_gradients: list) -> None:
+        self.gamma_gradients = np.sum(upstream_gradients * self.normalized_input, axis=0)
+        self.beta_gradients = np.sum(upstream_gradients, axis=0)
+
+    def update_parameters(self, learning_rate: float) -> None:
+        self.gamma -= learning_rate * self.gamma_gradients
+        self.beta -= learning_rate * self.beta_gradients
+
+    def train(self, upstream_gradients: list, learning_rate: float) -> None:
+        self.compute_gradients(upstream_gradients)
+        self.update_parameters(learning_rate)
+    
+    def forward(self, X: np.ndarray) -> np.ndarray:
+        mean = np.mean(X, axis=-1, keepdims=True)
+        variance = np.var(X, axis=-1, keepdims=True)
+        self.normalized_input = (X - mean) / np.sqrt(variance + self.epsilon)
+        return self.gamma * self.normalized_input + self.beta

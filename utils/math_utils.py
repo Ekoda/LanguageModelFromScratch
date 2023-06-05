@@ -56,3 +56,31 @@ def softmax(x: np.ndarray, axis=-1) -> np.ndarray:
     """
     e_x = np.exp(x - np.max(x, axis=axis, keepdims=True))
     return e_x / e_x.sum(axis=axis, keepdims=True)
+
+def relu_activation(n: float) -> float:
+    """
+    ReLU activation function.
+
+    Args:
+        n (float): Input value.
+
+    Returns:
+        float: Activation of the input.
+    """
+    return np.maximum(0, n)
+
+
+def relu_derivative(relu_output: float) -> float:
+    """
+    Calculate the derivative of the ReLU function.
+
+    This function assumes that 'relu_output' is the output of a ReLU function.
+    The derivative of the ReLU function is 1 for relu_output > 0, and 0 otherwise.
+
+    Args:
+        relu_output (float): The output of the ReLU function.
+
+    Returns:
+        float: The derivative of the ReLU function at the corresponding input.
+    """
+    return (relu_output > 0) * 1

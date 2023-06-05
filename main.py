@@ -4,7 +4,7 @@ from transformer.transformer import EssentialTransformer
 
 
 data = load_text_data(path="data/test.txt")
-model = EssentialTransformer(data)
+model = EssentialTransformer(data, 64, 2, 2)
 
 forward_pass = model.forward("quick fox", "jumped")
 

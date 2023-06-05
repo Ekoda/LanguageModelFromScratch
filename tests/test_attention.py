@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from transformer.attention import MultiHeadAttention, Head
 from utils.math_utils import softmax
-
+from utils.attention_utils import mask_attention_scores
 
 def test_head_attention_shape():
     head = Head(32)
@@ -24,3 +24,23 @@ def test_multihead_attention_forward_output_shape():
     X = np.random.rand(sequence_length, embedding_size)
     output = multihead_attention.forward(X)
     assert output.shape == X.shape, "Output shape does not match input shape."
+
+def test_mask_attention_scores():
+
+    scores = np.random.rand(3,3)
+    masked_scores = mask_attention_scores(scores)
+    softmax_scores = softmax(masked_scores, axis=1)
+    np.testing.assert_allclose(softmax_scores[0, 1:], [0., 0.], atol=1e-10)
+    np.testing.assert_allclose(softmax_scores[1, 2:], [0.], atol=1e-10)
+    np.testing.assert_allclose(softmax_scores[2, 3:], [], atol=1e-10)
+
+    scores = np.random.rand(2,2)
+    masked_scores = mask_attention_scores(scores)
+    softmax_scores = softmax(masked_scores, axis=1)
+    np.testing.assert_allclose(softmax_scores[0, 1:], [0.], atol=1e-10)
+    np.testing.assert_allclose(softmax_scores[1, 2:], [], atol=1e-10)
+
+    scores = np.random.rand(1,1)
+    masked_scores = mask_attention_scores(scores)
+    softmax_scores = softmax(masked_scores, axis=1)
+    np.testing.assert_allclose(softmax_scores[0, 1:], [], atol=1e-10)
