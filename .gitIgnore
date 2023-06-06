@@ -3,6 +3,7 @@ __pycache__/
 .pytest_cache/
 .DS_Store
 venv/
+.vscode/
 
 fleeting_notes.ipynb
 .ipynb_checkpoints/
