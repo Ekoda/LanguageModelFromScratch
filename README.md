@@ -20,5 +20,3 @@ root/
 │        └── decoder.py
 └── tests/
 ```
-
-![attention is all you need](https://media.arxiv-vanity.com/render-output/6494154/Figures/ModalNet-21.png)
