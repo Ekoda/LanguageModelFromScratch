@@ -3,6 +3,7 @@ from transformer.embedding import generate_embeddings, get_token_embeddings
 from transformer.preprocessing.tokenization import tokenize, build_vocab
 from transformer.positional_encoding import positional_encoding
 from transformer.decoder import Decoder
+from transformer.neural_network import NeuronLayer
 
 
 class EssentialTransformer:
@@ -11,9 +12,14 @@ class EssentialTransformer:
         self.vocabulary: dict[str, int] = build_vocab(tokenize(data)) # TODO: better tokenization
         self.embeddings: np.ndarray = generate_embeddings(len(self.vocabulary), model_dimension)
         self.decoder_blocks = [Decoder(model_dimension, n_attention_heads) for _ in range(decoder_blocks)]
+        self.linear_layer = NeuronLayer(model_dimension, model_dimension, activation='linear')
 
     def forward(self, X: str, y: str) -> str:
         input_embeddings = get_token_embeddings(self.embeddings, self.vocabulary, tokenize(X))
         positional_encoded_input = input_embeddings + positional_encoding(len(input_embeddings), input_embeddings.shape[1])
-        
+        decoder_output = positional_encoded_input
+        for decoder in self.decoder_blocks:
+            decoder_output = decoder.forward(decoder_output)
+        linear_transformation = np.array([self.linear_layer.forward(embedding) for embedding in decoder_output])
+
         return 0

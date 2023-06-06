@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 from utils.math_utils import sigmoid_activation, sigmoid_derivative, tanh_activation, tanh_derivative, softmax
 
+
 def test_sigmoid_activation():
     assert sigmoid_activation(1) == pytest.approx(0.73105857863, rel=1e-9)
     assert sigmoid_activation(-1) == pytest.approx(0.26894142137, rel=1e-9)

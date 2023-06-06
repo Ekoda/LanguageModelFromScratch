@@ -3,6 +3,7 @@ import pytest
 from transformer.preprocessing.tokenization import build_vocab
 from transformer.embedding import generate_embeddings
 
+
 def test_build_vocab():
     # Test with a simple list of tokens
     tokens = ["apple", "banana", "cherry", "banana", "apple"]

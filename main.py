@@ -6,6 +6,6 @@ from transformer.transformer import EssentialTransformer
 data = load_text_data(path="data/test.txt")
 model = EssentialTransformer(data, 64, 2, 2)
 
-forward_pass = model.forward("quick fox", "jumped")
+forward_pass = model.forward("the quick fox jumped", "over")
 
-print(forward_pass)
+print(forward_pass.shape)
