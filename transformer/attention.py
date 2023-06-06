@@ -3,6 +3,7 @@ from transformer.neural_network import NeuronLayer
 from utils.math_utils import softmax
 from utils.attention_utils import mask_attention_scores
 
+
 class MultiHeadAttention:
     def __init__ (self, embedding_size: int, n_heads: int = 8, masked: bool = False):
         self.embedding_size: int = embedding_size

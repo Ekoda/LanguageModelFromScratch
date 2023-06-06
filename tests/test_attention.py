@@ -4,6 +4,7 @@ from transformer.attention import MultiHeadAttention, Head
 from utils.math_utils import softmax
 from utils.attention_utils import mask_attention_scores
 
+
 def test_head_attention_shape():
     head = Head(32)
     X = np.random.rand(10, 32)
@@ -26,7 +27,6 @@ def test_multihead_attention_forward_output_shape():
     assert output.shape == X.shape, "Output shape does not match input shape."
 
 def test_mask_attention_scores():
-
     scores = np.random.rand(3,3)
     masked_scores = mask_attention_scores(scores)
     softmax_scores = softmax(masked_scores, axis=1)

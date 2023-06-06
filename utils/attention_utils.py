@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def mask_attention_scores(scores: np.ndarray) -> np.ndarray:
     """
     Masks the upper triangular part of an attention score matrix, 

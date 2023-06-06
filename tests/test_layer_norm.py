@@ -4,7 +4,6 @@ from transformer.layer_norm import LayerNorm
 
 
 def test_layer_norm():
-    
     # Test shape
     ln = LayerNorm(size=4)
     X = np.random.randn(4, 4)

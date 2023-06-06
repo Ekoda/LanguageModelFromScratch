@@ -2,6 +2,7 @@ import pytest
 import numpy as np
 from transformer.neural_network import NeuronLayer, Neuron
 
+
 def test_neuron():
     neuron = Neuron(n_inputs=2, activation='sigmoid')
 
