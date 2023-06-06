@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
-from transformer.preprocessing.tokenization import build_vocab
-from transformer.embedding import generate_embeddings
+from src.transformer.preprocessing.tokenization import build_vocab
+from src.transformer.components.embedding import generate_embeddings
 
 
 def test_build_vocab():

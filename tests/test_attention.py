@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
-from transformer.attention import MultiHeadAttention, Head
-from utils.math_utils import softmax
-from utils.attention_utils import mask_attention_scores
+from src.transformer.components.attention import MultiHeadAttention, Head
+from src.utils.math_utils import softmax
+from src.utils.attention_utils import mask_attention_scores
 
 
 def test_head_attention_shape():

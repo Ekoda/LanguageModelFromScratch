@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from transformer.positional_encoding import positional_encoding
+from src.transformer.components.positional_encoding import positional_encoding
 
 def test_positional_encoding():
     seq_len = 10

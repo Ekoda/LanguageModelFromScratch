@@ -1,9 +1,9 @@
 import numpy as np
-from transformer.embedding import generate_embeddings, get_token_embeddings
-from transformer.preprocessing.tokenization import tokenize, build_vocab
-from transformer.positional_encoding import positional_encoding
-from transformer.decoder import Decoder
-from transformer.neural_network import NeuronLayer
+from src.transformer.components.embedding import generate_embeddings, get_token_embeddings
+from src.transformer.preprocessing.tokenization import tokenize, build_vocab
+from src.transformer.components.positional_encoding import positional_encoding
+from src.transformer.decoder import Decoder
+from src.transformer.components.neural_network import NeuronLayer
 
 
 class EssentialTransformer:

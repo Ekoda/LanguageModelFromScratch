@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from transformer.neural_network import NeuronLayer, Neuron
+from src.transformer.components.neural_network import NeuronLayer, Neuron
 
 
 def test_neuron():

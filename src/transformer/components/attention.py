@@ -1,7 +1,7 @@
 import numpy as np
-from transformer.neural_network import NeuronLayer
-from utils.math_utils import softmax
-from utils.attention_utils import mask_attention_scores
+from src.transformer.components.neural_network import NeuronLayer
+from src.utils.math_utils import softmax
+from src.utils.attention_utils import mask_attention_scores
 
 
 class MultiHeadAttention:

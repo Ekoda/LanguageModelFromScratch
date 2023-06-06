@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from transformer.decoder import Decoder
+from src.transformer.decoder import Decoder
 
 
 def test_forward():

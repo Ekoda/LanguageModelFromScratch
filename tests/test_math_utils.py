@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from utils.math_utils import sigmoid_activation, sigmoid_derivative, tanh_activation, tanh_derivative, softmax
+from src.utils.math_utils import sigmoid_activation, sigmoid_derivative, tanh_activation, tanh_derivative, softmax
 
 
 def test_sigmoid_activation():

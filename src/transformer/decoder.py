@@ -1,7 +1,7 @@
 import numpy as np
-from transformer.attention import MultiHeadAttention
-from transformer.neural_network import NeuronLayer, FeedForwardNetwork
-from transformer.layer_norm import LayerNorm
+from src.transformer.components.attention import MultiHeadAttention
+from src.transformer.components.neural_network import NeuronLayer, FeedForwardNetwork
+from src.transformer.components.layer_norm import LayerNorm
 
 
 class Decoder:

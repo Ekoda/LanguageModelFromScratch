@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from transformer.layer_norm import LayerNorm
+from src.transformer.components.layer_norm import LayerNorm
 
 
 def test_layer_norm():

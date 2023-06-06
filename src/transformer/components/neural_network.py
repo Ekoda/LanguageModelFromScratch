@@ -1,6 +1,6 @@
 import numpy as np
 from typing import Union, Optional
-from utils.math_utils import sigmoid_activation, sigmoid_derivative, tanh_activation, tanh_derivative, relu_activation, relu_derivative
+from src.utils.math_utils import sigmoid_activation, sigmoid_derivative, tanh_activation, tanh_derivative, relu_activation, relu_derivative
 
 
 class Neuron:
