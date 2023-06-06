@@ -7,3 +7,16 @@ The project breaks down the Transformer into its core components, implementing e
 
 
 #### Project Structure
+The project is structured in a hierarchical and modular fashion according to the original "attention is all you need" paper (Vaswani et al., 2017). As such the code in the components folder contain most of the detail, while code such as the transformer.py and decoder.py focus mainly on tying all the pieces together.
+
+root/
+├── src/
+│   └── utils/
+│   └── transformer/
+│        └── components/
+│        └── preprocessing/
+│        └── transformer.py
+│        └── decoder.py
+└── tests/
+
+![attention is all you need](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.arxiv-vanity.com%2Fpapers%2F1706.03762%2F&psig=AOvVaw1pZ-CmZ-5LYyrgL7yTp1n4&ust=1686142167294000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCNCgppnXrv8CFQAAAAAdAAAAABAs)
