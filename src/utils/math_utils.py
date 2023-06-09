@@ -57,6 +57,30 @@ def softmax(x: np.ndarray, axis=-1) -> np.ndarray:
     e_x = np.exp(x - np.max(x, axis=axis, keepdims=True))
     return e_x / e_x.sum(axis=axis, keepdims=True)
 
+def softmax_with_temperature(x: np.ndarray, temperature: float) -> np.ndarray:
+    """
+    Compute the softmax of each element along an axis of a numpy array 
+    with temperature scaling applied.
+
+    Parameters
+    ----------
+    logits : np.ndarray
+        Input array (logits).
+    temperature : float
+        The temperature factor to scale the logits. Higher values make the output 
+        probabilities closer to uniform distribution (more randomness),
+        and lower values make it closer to one-hot encoding (less randomness).
+
+    Returns
+    -------
+    np.ndarray
+        The array with temperature-scaled softmax applied.
+    """
+    scaled_logits = x / temperature
+    e_x = np.exp(scaled_logits - np.max(scaled_logits))
+    return e_x / e_x.sum()
+
+
 def relu_activation(n: float) -> float:
     """
     ReLU activation function.

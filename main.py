@@ -4,8 +4,8 @@ from src.transformer.transformer import EssentialTransformer
 
 
 data = load_text_data(path="data/test.txt")
-model = EssentialTransformer(data, 64, 2, 2)
+model = EssentialTransformer(data, model_dimension=64, n_attention_heads=2, decoder_blocks=2)
 
 forward_pass = model.forward("the quick fox jumped", "over")
 
-print(forward_pass.shape)
+print(forward_pass)

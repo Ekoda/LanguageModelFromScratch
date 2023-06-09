@@ -5,7 +5,7 @@ EssentialTransformer is an exploration into the intricate workings of the Transf
 
 The project breaks down the Transformer into its core components, implementing each piece separately using Numpy. The focus is on code that is easy to understand and learn from, so you can see exactly how each piece of the puzzle fits together.
 
-
+---
 #### Project Structure
 The project is structured in a hierarchical and modular fashion according to the original "attention is all you need" paper (Vaswani et al., 2017). As such the code in the components folder contain most of the detail, while code such as the transformer.py and decoder.py focus mainly on tying all the pieces together.
 
