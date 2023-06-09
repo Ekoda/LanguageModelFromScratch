@@ -4,7 +4,7 @@ from src.transformer.preprocessing.tokenization import tokenize, build_vocab
 from src.transformer.components.positional_encoding import positional_encoding
 from src.transformer.decoder import Decoder
 from src.transformer.components.neural_network import NeuronLayer
-from src.utils.math_utils import softmax_with_temperature
+from src.utils.math_utils import softmax
 from src.utils.data_utils import find_next_word
 
 
@@ -31,5 +31,5 @@ class EssentialTransformer:
         for decoder in self.decoder_blocks:
             decoder_output = decoder.forward(decoder_output)
         output_layer = np.array([self.output_layer.forward(embedding) for embedding in decoder_output])
-        token_predictions = softmax_with_temperature(output_layer, temperature)
+        token_predictions = softmax(output_layer, temperature=temperature)
         return find_next_word(token_predictions, self.reversed_vocabulary)

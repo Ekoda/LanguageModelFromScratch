@@ -37,9 +37,12 @@ def tanh_derivative(tanh_output: float) -> float:
     """
     return 1 - tanh_output ** 2
 
-def softmax(x: np.ndarray, axis=-1) -> np.ndarray:
+def softmax(x: np.ndarray, axis: int = -1, temperature: float = None) -> np.ndarray:
     """
     Compute the softmax of each element along an axis of a numpy array.
+
+    If temperature is provided computes the softmax of each element along an axis of a numpy array 
+    with temperature scaling applied.
 
     Parameters
     ----------
@@ -47,26 +50,7 @@ def softmax(x: np.ndarray, axis=-1) -> np.ndarray:
         Input array.
     axis : int, optional
         Axis along which the softmax normalization is applied. The default is -1.
-
-    Returns
-    -------
-    np.ndarray
-        The array with softmax applied elementwise along the specified axis.
-
-    """
-    e_x = np.exp(x - np.max(x, axis=axis, keepdims=True))
-    return e_x / e_x.sum(axis=axis, keepdims=True)
-
-def softmax_with_temperature(x: np.ndarray, temperature: float) -> np.ndarray:
-    """
-    Compute the softmax of each element along an axis of a numpy array 
-    with temperature scaling applied.
-
-    Parameters
-    ----------
-    logits : np.ndarray
-        Input array (logits).
-    temperature : float
+    temperature : float, optional
         The temperature factor to scale the logits. Higher values make the output 
         probabilities closer to uniform distribution (more randomness),
         and lower values make it closer to one-hot encoding (less randomness).
@@ -74,12 +58,15 @@ def softmax_with_temperature(x: np.ndarray, temperature: float) -> np.ndarray:
     Returns
     -------
     np.ndarray
-        The array with temperature-scaled softmax applied.
-    """
-    scaled_logits = x / temperature
-    e_x = np.exp(scaled_logits - np.max(scaled_logits))
-    return e_x / e_x.sum()
+        The array with softmax applied elementwise along the specified axis.
 
+    """
+    if temperature:
+        scaled_logits = x / temperature
+        e_x = np.exp(scaled_logits - np.max(scaled_logits))
+    else:
+        e_x = np.exp(x - np.max(x, axis=axis, keepdims=True))
+    return e_x / e_x.sum(axis=axis, keepdims=True)
 
 def relu_activation(n: float) -> float:
     """
