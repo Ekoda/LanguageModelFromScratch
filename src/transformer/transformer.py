@@ -24,7 +24,7 @@ class EssentialTransformer:
     def train(self, X, y):
         pass
 
-    def forward(self, X: str, y: str, temperature: float = None) -> str:
+    def forward(self, X: str, y: str = None, temperature: float = None) -> str:
         sequence_embeddings = get_token_embeddings(self.embeddings, self.vocabulary, tokenize(X))
         positionally_encoded = sequence_embeddings + positional_encoding(len(sequence_embeddings), self.model_dimension)
         decoder_output = positionally_encoded
