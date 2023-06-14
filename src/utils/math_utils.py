@@ -95,3 +95,11 @@ def relu_derivative(relu_output: float) -> float:
         float: The derivative of the ReLU function at the corresponding input.
     """
     return (relu_output > 0) * 1
+
+
+def dot(A: list[float], B: list[float]) -> float:
+    assert len(A) == len(B), "Dot product requires arrays of the same length"
+    return sum(a * b for a, b in zip(A, B))
+
+def mean(X: list[float]) -> float:
+    return sum(X) / len(X)

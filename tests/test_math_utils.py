@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from src.utils.math_utils import sigmoid_activation, sigmoid_derivative, tanh_activation, tanh_derivative, softmax
+from src.utils.math_utils import sigmoid_activation, sigmoid_derivative, tanh_activation, tanh_derivative, softmax, dot
 
 
 def test_sigmoid_activation():
@@ -37,3 +37,25 @@ def test_softmax():
     assert s_x.shape == x.shape
     assert np.all(np.isclose(np.sum(s_x, axis=1), np.ones(2)))
     assert np.all(np.argmax(s_x, axis=1) == np.argmax(x, axis=1))
+
+
+def test_dot_product_with_valid_vectors():
+    A = [1.0, 2.0, 3.0]
+    B = [4.0, 5.0, 6.0]
+    expected_result = 32.0
+    result = dot(A, B)
+    assert result == expected_result
+
+
+def test_dot_product_with_empty_vectors():
+    A, B = [], []
+    expected_result = 0.0
+    result = dot(A, B)
+    assert result == expected_result
+
+
+def test_dot_product_with_vectors_of_different_lengths():
+    A = [1.0, 2.0, 3.0]
+    B = [4.0, 5.0]
+    with pytest.raises(AssertionError):
+        dot(A, B)
