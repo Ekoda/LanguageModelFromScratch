@@ -1,6 +1,28 @@
 import numpy as np
 
 class ValueNode:
+    """
+    The ValueNode class represents a node in a computational graph used for gradient-based optimization calculations.
+
+    Each instance of this class represents a value which, in addition to its actual data, holds references to previous nodes (children),
+    the operation that produced it, and a backward function for the calculation of gradients. The class supports basic arithmetic operations,
+    which are overridden to return new ValueNode instances while establishing connections that define the computation graph.
+
+    Upon calling the backward method on a ValueNode instance, it performs a backward pass through the computation graph, computing and
+    accumulating gradients along the way. This operation facilitates backpropagation and gradient descent computations in neural network training,
+    or any other context where automatic differentiation is required.
+
+    Attributes:
+    data (float): The value held by the node.
+    gradient (float): The gradient of the function at this node, initially set to 0.
+    previous (set): A set of child nodes from which this node was derived.
+    operation (str): A string describing the operation that produced this node.
+
+    Core methods:
+    ensure_other_node(other): Checks if 'other' is a ValueNode instance, if not, it converts 'other' into a ValueNode instance.
+    backward(): Performs a backward pass through the computation graph, computing and storing gradients along the way.
+
+    """
     def __init__(self, data: float, children: tuple = (), operation: str = ''):
         self.data = data
         self.gradient = 0

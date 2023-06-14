@@ -13,8 +13,8 @@ class NeuralComponent:
 
 class Neuron(NeuralComponent):
     def __init__(self, input_size=2, activation='sigmoid'):
-        self.w = [ValueNode(np.random.randn() * 0.01) for _ in range(input_size)]
-        self.b = ValueNode(np.random.randn() * 0.01)
+        self.w = [ValueNode(np.random.randn()) for _ in range(input_size)]
+        self.b = ValueNode(np.random.randn())
         self.activation = activation
         self.activation_functions = {
             'sigmoid': self.sigmoid, 
