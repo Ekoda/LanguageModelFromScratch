@@ -13,9 +13,9 @@ class NeuralComponent:
 
 
 class Neuron(NeuralComponent):
-    def __init__(self, input_size=2, activation='sigmoid'):
+    def __init__(self, input_size=2, activation='sigmoid', include_bias=True):
         self.w = [ValueNode(np.random.randn()) for _ in range(input_size)]
-        self.b = ValueNode(np.random.randn())
+        self.b = ValueNode(np.random.randn()) if include_bias else None
         self.activation = activation
         self.activation_functions = {
             'sigmoid': self.sigmoid, 
@@ -33,17 +33,21 @@ class Neuron(NeuralComponent):
         return x
 
     def parameters(self):
-        return self.w + [self.b]
+        if self.b:
+            return self.w + [self.b]
+        return self.w
 
     def forward(self, X):
-        pre_activation = dot(X, self.w) + self.b
+        pre_activation = dot(X, self.w)
+        if self.b:
+            pre_activation += self.b
         activation_function = self.activation_functions[self.activation]
         return activation_function(pre_activation)
 
 
 class NeuronLayer(NeuralComponent):
-    def __init__(self, input_size:int, output_size:int, activation:str, loss:str='binary_cross_entropy'):
-        self.neurons = [Neuron(input_size, activation) for _ in range(output_size)]
+    def __init__(self, input_size:int, output_size:int, activation:str='relu', include_bias:bool=True, loss:str='binary_cross_entropy'):
+        self.neurons = [Neuron(input_size, activation, include_bias) for _ in range(output_size)]
     
     def parameters(self):
         return [p for n in self.neurons for p in n.parameters()]
