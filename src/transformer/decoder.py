@@ -1,7 +1,9 @@
 import numpy as np
+from src.utils.type_utils import Matrix
 from src.transformer.components.attention import MultiHeadAttention
-from src.transformer.components.neural_network import NeuronLayer, FeedForwardNetwork
+from src.neural_net.network import NeuronLayer, FeedForwardNetwork
 from src.transformer.components.layer_norm import LayerNorm
+from src.utils.math_utils import add, get_shape
 
 
 class Decoder:
@@ -10,12 +12,12 @@ class Decoder:
         self.n_heads: int = n_attention_heads
         self.masked_attention = MultiHeadAttention(embedding_size, n_attention_heads, masked=True)
         self.masked_attention_norm = LayerNorm(embedding_size)
-        self.feed_forward_network = FeedForwardNetwork(embedding_size)
+        self.feed_forward_network = FeedForwardNetwork(embedding_size, embedding_size)
         self.feed_forward_norm = LayerNorm(embedding_size)
 
-    def forward(self, X: np.ndarray) -> np.ndarray:
+    def forward(self, X: Matrix) -> Matrix:
         attention_layer = self.masked_attention.forward(X)
-        attention_add_and_norm = self.masked_attention_norm.forward(X + attention_layer)
-        feed_forward = np.array([self.feed_forward_network.forward(embedding) for embedding in X])
-        feed_forward_add_and_norm = self.feed_forward_norm.forward(attention_add_and_norm + feed_forward)
+        attention_add_and_norm = self.masked_attention_norm.forward(add(X, attention_layer))
+        feed_forward = [self.feed_forward_network.forward(embedding) for embedding in X]
+        feed_forward_add_and_norm = self.feed_forward_norm.forward(add(attention_add_and_norm, feed_forward))
         return feed_forward_add_and_norm

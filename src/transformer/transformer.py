@@ -1,10 +1,10 @@
 import numpy as np
 from src.transformer.components.embedding import generate_embeddings, get_token_embeddings
 from src.transformer.preprocessing.tokenization import tokenize, build_vocab
-from src.transformer.components.positional_encoding import positional_encoding
+from src.transformer.components.positional_encoding import encode_position
 from src.transformer.decoder import Decoder
-from src.transformer.components.neural_network import NeuronLayer
-from src.utils.math_utils import softmax
+from src.neural_net.network import NeuronLayer
+from src.utils.math_utils import softmax, get_shape
 from src.utils.data_utils import find_next_word
 
 
@@ -14,9 +14,9 @@ class EssentialTransformer:
         self.model_dimension: int = model_dimension
         self.vocabulary: dict[str, int] = build_vocab(tokenize(data)) # TODO: better tokenization
         self.reversed_vocabulary: dict[int, str] = {index: word for word, index in self.vocabulary.items()}
-        self.embeddings: np.ndarray = generate_embeddings(len(self.vocabulary), model_dimension)
+        self.embeddings: list[list[float]] = generate_embeddings(len(self.vocabulary), model_dimension)
         self.decoder_blocks = [Decoder(model_dimension, n_attention_heads) for _ in range(decoder_blocks)]
-        self.output_layer = NeuronLayer(len(self.vocabulary), model_dimension, activation='linear')
+        self.output_layer = NeuronLayer(model_dimension, len(self.vocabulary), activation='linear')
 
     def calculate_loss(self, prediction, target):
         pass
@@ -26,10 +26,10 @@ class EssentialTransformer:
 
     def forward(self, X: str, y: str = None, temperature: float = None) -> str:
         sequence_embeddings = get_token_embeddings(self.embeddings, self.vocabulary, tokenize(X))
-        positionally_encoded = sequence_embeddings + positional_encoding(len(sequence_embeddings), self.model_dimension)
-        decoder_output = positionally_encoded
+        positionally_encoded_embeddings = encode_position(sequence_embeddings)
+        decoder_output = positionally_encoded_embeddings
         for decoder in self.decoder_blocks:
             decoder_output = decoder.forward(decoder_output)
-        output_layer = np.array([self.output_layer.forward(embedding) for embedding in decoder_output])
+        output_layer = [self.output_layer.forward(embedding) for embedding in decoder_output]
         token_predictions = softmax(output_layer, temperature=temperature)
         return find_next_word(token_predictions, self.reversed_vocabulary)

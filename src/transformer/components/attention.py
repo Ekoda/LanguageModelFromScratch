@@ -1,8 +1,9 @@
 import numpy as np
-from src.transformer.components.neural_network import NeuronLayer
-from src.utils.math_utils import softmax
+from src.utils.type_utils import Matrix
+from src.neural_net.network import NeuronLayer
+from src.utils.math_utils import softmax, transpose, matmul, apply_elementwise
 from src.utils.attention_utils import mask_attention_scores
-
+from src.utils.generic_utils import print_matrix
 
 class MultiHeadAttention:
     def __init__ (self, embedding_size: int, n_heads: int = 8, masked: bool = False):
@@ -12,11 +13,11 @@ class MultiHeadAttention:
         self.heads = [Head(embedding_size // n_heads, masked=masked) for _ in range(n_heads)]
         self.linear_layer = NeuronLayer(embedding_size, embedding_size, activation='linear', include_bias=False)
 
-    def forward(self, X: np.ndarray) -> np.ndarray:
-        embedding_split = np.split(X, self.n_heads, axis=-1)
+    def forward(self, X: Matrix) -> Matrix:
+        embedding_split = np.split(np.array(X), self.n_heads, axis=-1)
         head_outputs = [head.forward(embedding_portion) for head, embedding_portion in zip(self.heads, embedding_split)]
-        concat = np.concatenate(head_outputs, axis=-1)
-        linear_transformation = np.array([self.linear_layer.forward(embedding) for embedding in concat])
+        concat = [x + y for x, y in zip(*head_outputs)]
+        linear_transformation = [self.linear_layer.forward(embedding) for embedding in concat]
         return linear_transformation
 
 
@@ -28,15 +29,14 @@ class Head:
         self.key_layer = NeuronLayer(size, size, activation='linear', include_bias=False)
         self.value_layer = NeuronLayer(size, size, activation='linear', include_bias=False)
 
-    def forward(self, X: np.ndarray) -> np.ndarray:
-        queries = np.array([self.query_layer.forward(embedding) for embedding in X]) # T, C 
-        keys = np.array([self.key_layer.forward(embedding) for embedding in X]) # T, C
-        values = np.array([self.value_layer.forward(embedding) for embedding in X]) # T, C
-
-        scores = np.matmul(queries, keys.T) / np.sqrt(self.size) # T, T
+    def forward(self, X: Matrix) -> Matrix:
+        queries = [self.query_layer.forward(embedding) for embedding in X] # T, C 
+        keys = [self.key_layer.forward(embedding) for embedding in X] # T, C
+        values = [self.value_layer.forward(embedding) for embedding in X] # T, C
+        raw_scores = matmul(queries, transpose(keys)) # T, T
+        scores = apply_elementwise(raw_scores, lambda x: x / np.sqrt(self.size)) # T, T - normalized scores
         if self.masked: 
-            scores = mask_attention_scores(scores) # T, T
-        softmax_scores = softmax(scores, axis=-1) # T, T
-        
-        weighted_values = np.matmul(softmax_scores, values) # T, C
+            scores = mask_attention_scores(scores) # T, T    
+        softmax_scores = softmax(scores) # T, T
+        weighted_values = matmul(softmax_scores, values) # T, C
         return weighted_values

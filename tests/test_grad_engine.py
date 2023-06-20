@@ -58,3 +58,22 @@ def test_sigmoid():
     result.backward()
     assert np.isclose(result.data, 1 / (1 + np.exp(-0.5)))
     assert np.isclose(node.gradient, result.data * (1 - result.data))
+
+def test_sqrt_invalid_input():
+    node = ValueNode(-4.0)
+    with pytest.raises(AssertionError):
+        node.sqrt()
+
+def test_sqrt_zero():
+    node = ValueNode(0.0)
+    result = node.sqrt()
+    result.backward()
+    assert result.data == 0.0
+    assert node.gradient == 0.0
+
+def test_sqrt():
+    node = ValueNode(4.0)
+    result = node.sqrt()
+    result.backward()
+    assert result.data == 2.0
+    assert node.gradient == 0.25

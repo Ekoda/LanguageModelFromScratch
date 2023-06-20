@@ -1,32 +1,38 @@
 import numpy as np
-from typing import Optional
+from src.utils.type_utils import Matrix
+from src.neural_net.grad_engine import ValueNode
+from src.utils.math_utils import mean, variance, get_shape, add, sub, apply_elementwise
 
 
 class LayerNorm:
     def __init__ (self, size: int):
-        self.size: int = size
-        self.gamma: np.ndarray = np.ones(size)
-        self.beta: np.ndarray = np.zeros(size)
-        self.gamma_gradients: np.ndarray = np.zeros(size)
-        self.beta_gradients: np.ndarray = np.zeros(size)
-        self.epsilon: float = 1e-6
-        self.normalized_input: Optional[np.ndarray] = None
+        self.size = size
+        self.gamma = [ValueNode(np.random.randn()) for _ in range(size)]
+        self.beta = [ValueNode(np.random.randn()) for _ in range(size)]
+        self.epsilon = 1e-6
 
-    def compute_gradients(self, upstream_gradients: list) -> None:
-        self.gamma_gradients = np.sum(upstream_gradients * self.normalized_input, axis=0)
-        self.beta_gradients = np.sum(upstream_gradients, axis=0)
+    def _compute_means(self, X: Matrix) -> list[ValueNode]:
+        return [mean(embedding) for embedding in X]
 
-    def update_parameters(self, learning_rate: float) -> None:
-        self.gamma -= learning_rate * self.gamma_gradients
-        self.beta -= learning_rate * self.beta_gradients
+    def _compute_variances(self, X: Matrix) -> list[ValueNode]:
+        return [variance(embedding) for embedding in X]
 
-    def train(self, upstream_gradients: list, learning_rate: float) -> None:
-        self.compute_gradients(upstream_gradients)
-        self.update_parameters(learning_rate)
-    
-    def forward(self, X: np.ndarray) -> np.ndarray:
-        mean = np.mean(X, axis=-1, keepdims=True)
-        variance = np.var(X, axis=-1, keepdims=True)
-        self.normalized_input = (X - mean) / np.sqrt(variance + self.epsilon)
-        return self.gamma * self.normalized_input + self.beta
+    def _subtract_means(self, X: Matrix, means: list[ValueNode]) -> Matrix:
+        return [[dimension - m for dimension in embedding] for embedding, m in zip(X, means)]
+
+    def _normalize(self, subtracted_mean: Matrix, variances: list[ValueNode]) -> Matrix:
+        return [[(dimension / ((v + self.epsilon).sqrt())) for dimension in subtracted_embedding] 
+                for subtracted_embedding, v in zip(subtracted_mean, variances)]
+
+    def _scale_and_shift(self, normalized: Matrix) -> Matrix:
+        return [[g * dimension + b for g, b, dimension in zip(self.gamma, self.beta, embedding)] 
+                for embedding in normalized]
+
+    def forward(self, X: Matrix) -> Matrix:
+        means = self._compute_means(X)
+        variances = self._compute_variances(X)
+        subtracted_mean = self._subtract_means(X, means)
+        normalized = self._normalize(subtracted_mean, variances)
+        output = self._scale_and_shift(normalized)
+        return output
         

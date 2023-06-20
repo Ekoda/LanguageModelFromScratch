@@ -1,8 +1,11 @@
 import numpy as np
+from src.utils.type_utils import Matrix, ValueNode
+from math import exp
 
 
 def sigmoid_activation(n: float) -> float:
     return 1 / (1 + np.exp(-n))
+
 
 def sigmoid_derivative(sigmoid_output: float) -> float:
         """
@@ -37,19 +40,30 @@ def tanh_derivative(tanh_output: float) -> float:
     """
     return 1 - tanh_output ** 2
 
-def softmax(x: np.ndarray, axis: int = -1, temperature: float = None) -> np.ndarray:
-    """
-    Compute the softmax of each element along an axis of a numpy array.
+def matrix_max(matrix: Matrix) -> ValueNode:
+    """Finds the maximum value in a 2D list (matrix)"""
+    return max(max(row) for row in matrix)
 
-    If temperature is provided computes the softmax of each element along an axis of a numpy array 
-    with temperature scaling applied.
+def matrix_sum(matrix: Matrix) -> ValueNode:
+    """Finds the sum of all values in a 2D list (matrix)"""
+    return sum(sum(row) for row in matrix)
+
+def np_softmax(matrix: np.ndarray, temperature: float = None) -> np.ndarray:
+        if temperature is not None:
+            matrix = np.array(matrix) / temperature
+        e_x = np.exp(matrix - np.max(matrix))
+        return e_x / e_x.sum()
+
+def softmax(matrix: Matrix, temperature: float = None) -> Matrix:
+    """
+    Compute the softmax of each element of a 2D list (matrix)
+
+    If temperature is provided, computes the softmax of each element with temperature scaling applied.
 
     Parameters
     ----------
-    x : np.ndarray
-        Input array.
-    axis : int, optional
-        Axis along which the softmax normalization is applied. The default is -1.
+    matrix : Matrix
+        Input matrix.
     temperature : float, optional
         The temperature factor to scale the logits. Higher values make the output 
         probabilities closer to uniform distribution (more randomness),
@@ -57,16 +71,18 @@ def softmax(x: np.ndarray, axis: int = -1, temperature: float = None) -> np.ndar
 
     Returns
     -------
-    np.ndarray
-        The array with softmax applied elementwise along the specified axis.
-
+    Matrix
+        The matrix with softmax applied elementwise.
     """
     if temperature:
-        scaled_logits = x / temperature
-        e_x = np.exp(scaled_logits - np.max(scaled_logits))
+        scaled_logits = apply_elementwise(matrix, lambda x: x / temperature)
+        max_value = matrix_max(scaled_logits)
+        e_x = apply_elementwise(scaled_logits, lambda x: (x - max_value).exp())
     else:
-        e_x = np.exp(x - np.max(x, axis=axis, keepdims=True))
-    return e_x / e_x.sum(axis=axis, keepdims=True)
+        max_value = matrix_max(matrix)
+        e_x = apply_elementwise(matrix, lambda x: (x - max_value).exp())
+    sum_e_x = matrix_sum(e_x)
+    return apply_elementwise(e_x, lambda x: x / sum_e_x)
 
 def relu_activation(n: float) -> float:
     """
@@ -103,3 +119,113 @@ def dot(A: list[float], B: list[float]) -> float:
 
 def mean(X: list[float]) -> float:
     return sum(X) / len(X)
+
+def variance(X: list[float]) -> float:
+    return sum((x - mean(X)) ** 2 for x in X) / len(X)
+
+def get_shape(li) -> tuple[int, ...]:
+    if not isinstance(li, list) or not li:
+        return ()
+    if all(isinstance(item, list) and len(item) == len(li[0]) for item in li):
+        return (len(li),) + get_shape(li[0])
+    else:
+        return (len(li),)
+
+def add(A: Matrix, B: Matrix) -> Matrix:
+    """
+    Add two lists (1D or 2D) element-wise. 
+
+    This function performs element-wise addition of two lists, A and B. Both lists should 
+    have the same size (length for 1D lists, or same number of rows and columns for 2D lists). 
+    The function supports 1D lists (vectors) and 2D lists (matrices), and it determines which 
+    operation to perform based on the dimensionality of the inputs.
+
+    Parameters
+    ----------
+    A : list
+        First list for addition. Can be 1D or 2D.
+    B : list
+        Second list for addition. Should have the same dimensions as A.
+
+    Returns
+    -------
+    list
+        The resulting list after performing element-wise addition. Same dimensions as the inputs.
+
+    Raises
+    ------
+    AssertionError
+        If A and B have different sizes, an AssertionError is raised.
+    """
+    assert len(A) == len(B), "Addition requires arrays of the same size" 
+    if all(isinstance(x, list) for x in A) and all(isinstance(x, list) for x in B):
+        assert len(A) == len(B), "Addition requires arrays of the same size"
+        assert all(len(a) == len(b) for a, b in zip(A, B)), "All rows must be the same length"
+        return [[a + b for a, b in zip(row_a, row_b)] for row_a, row_b in zip(A, B)]
+    else:
+        assert len(A) == len(B), "Addition requires arrays of the same length"
+        return [a + b for a, b in zip(A, B)]
+
+def sub(A: Matrix, B: Matrix) -> Matrix:
+    """
+    Add two lists (1D or 2D) element-wise. 
+
+    This function performs element-wise subtraction of two lists, A and B. Both lists should 
+    have the same size (length for 1D lists, or same number of rows and columns for 2D lists). 
+    The function supports 1D lists (vectors) and 2D lists (matrices), and it determines which 
+    operation to perform based on the dimensionality of the inputs.
+
+    Parameters
+    ----------
+    A : list
+        First list for subtraction. Can be 1D or 2D.
+    B : list
+        Second list for subtraction. Should have the same dimensions as A.
+
+    Returns
+    -------
+    list
+        The resulting list after performing element-wise subtraction. Same dimensions as the inputs.
+
+    Raises
+    ------
+    AssertionError
+        If A and B have different sizes, an AssertionError is raised.
+    """
+    assert len(A) == len(B), "subtraction requires arrays of the same size" 
+    if all(isinstance(x, list) for x in A) and all(isinstance(x, list) for x in B):
+        assert len(A) == len(B), "subtraction requires arrays of the same size"
+        assert all(len(a) == len(b) for a, b in zip(A, B)), "All rows must be the same length"
+        return [[a - b for a, b in zip(row_a, row_b)] for row_a, row_b in zip(A, B)]
+    else:
+        assert len(A) == len(B), "subtraction requires arrays of the same length"
+        return [a - b for a, b in zip(A, B)]
+
+def transpose(A: Matrix) -> Matrix:
+    if not A or not A[0]:
+        return []
+    m, n = len(A), len(A[0])
+    transposed_matrix = []
+    for i in range(n):
+        transposed_row = []
+        for j in range(m):
+            transposed_row.append(A[j][i])
+        transposed_matrix.append(transposed_row)
+    return transposed_matrix
+
+def matmul(A: Matrix, B: Matrix) -> Matrix:
+    Am, An = len(A), len(A[0])
+    Bm, Bn = len(B), len(B[0])
+    assert An == Bm, "Matrix multiplication requires the number of columns in A to be equal to the number of rows in B"
+    result_matrix = []
+    for i in range(Am):
+        result_row = []
+        for j in range(Bn):
+            vector_b = [B[k][j] for k in range(Bm)]
+            dot_product = dot(A[i], vector_b)
+            result_row.append(dot_product)
+        result_matrix.append(result_row)
+    return result_matrix
+
+def apply_elementwise(matrix: Matrix, operation: callable) -> Matrix:
+    return [[operation(x) for x in row] for row in matrix]

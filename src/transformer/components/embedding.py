@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def generate_embeddings(vocabulary_size: int, embedding_size: int) -> np.ndarray:
+def generate_embeddings(vocabulary_size: int, embedding_size: int) -> list[list[float]]:
     """
     Generates a matrix of initial embeddings for a vocabulary of given size and embedding dimension.
 
@@ -10,11 +10,11 @@ def generate_embeddings(vocabulary_size: int, embedding_size: int) -> np.ndarray
         embedding_size (int): The dimension of the embedding space.
 
     Returns:
-        np.ndarray: A matrix of shape (vocabulary_size, embedding_size) containing the initial embeddings.
+        list: A matrix of shape (vocabulary_size, embedding_size) containing the initial embeddings.
     """
-    return np.random.rand(vocabulary_size, embedding_size) * 0.01
+    return np.random.rand(vocabulary_size, embedding_size).tolist()
 
-def get_token_embeddings(embeddings: np.ndarray, vocabulary: dict[str, int], tokens: list[str]) -> np.ndarray:
+def get_token_embeddings(embeddings: list[list[float]], vocabulary: dict[str, int], tokens: list[str]) -> list[list[float]]:
     """
     Gets the embeddings for a list of tokens from a matrix of embeddings.
 
@@ -24,6 +24,6 @@ def get_token_embeddings(embeddings: np.ndarray, vocabulary: dict[str, int], tok
         tokens (list[str]): The list of tokens to fetch the embeddings for.
 
     Returns:
-        np.ndarray: A matrix of shape (len(tokens), embedding_size) containing the embeddings for the tokens.
+        list[list[float]]: A matrix of shape (len(tokens), embedding_size) containing the embeddings for the tokens.
     """
-    return np.array([embeddings[vocabulary[token]] for token in tokens])
+    return [embeddings[vocabulary[token]] for token in tokens]

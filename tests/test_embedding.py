@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 from src.transformer.preprocessing.tokenization import build_vocab
 from src.transformer.components.embedding import generate_embeddings
+from src.utils.math_utils import get_shape
 
 
 def test_build_vocab():
@@ -21,23 +22,17 @@ def test_build_vocab():
     assert build_vocab(tokens) == expected_vocab
 
 def test_generate_embeddings():
-    # Test with a small vocabulary and embedding size
     vocab_size = 3
     embedding_size = 2
     embeddings = generate_embeddings(vocab_size, embedding_size)
-    assert embeddings.shape == (vocab_size, embedding_size)
-    assert np.all(embeddings >= 0) and np.all(embeddings <= 0.01)
+    assert get_shape(embeddings) == (vocab_size, embedding_size)
 
-    # Test with a larger vocabulary and embedding size
     vocab_size = 100
     embedding_size = 50
     embeddings = generate_embeddings(vocab_size, embedding_size)
-    assert embeddings.shape == (vocab_size, embedding_size)
-    assert np.all(embeddings >= 0) and np.all(embeddings <= 0.01)
+    assert get_shape(embeddings) == (vocab_size, embedding_size)
 
-    # Test with a vocabulary size of 1
     vocab_size = 1
     embedding_size = 1
     embeddings = generate_embeddings(vocab_size, embedding_size)
-    assert embeddings.shape == (vocab_size, embedding_size)
-    assert np.all(embeddings >= 0) and np.all(embeddings <= 0.01)
+    assert get_shape(embeddings) == (vocab_size, embedding_size)

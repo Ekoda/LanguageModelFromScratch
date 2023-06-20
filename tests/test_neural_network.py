@@ -34,7 +34,7 @@ def test_NeuronLayer():
 def test_FeedForwardNetwork():
     network = FeedForwardNetwork(input_size=3, output_size=2)
     
-    assert len(network.parameters()) == 74 # first layer: 3*4*4=48, second layer: 12*2-2=26, total: 74.
+    assert len(network.parameters()) == 50 # (3 * 2 * 4) + (2 * 4) + (2 * 4 * 2) + 2
 
     X = [ValueNode(np.random.randn()) for _ in range(3)]
     output = network.forward(X)

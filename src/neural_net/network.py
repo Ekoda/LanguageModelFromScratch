@@ -1,3 +1,4 @@
+from src.utils.type_utils import Matrix
 from src.neural_net.grad_engine import ValueNode
 from src.utils.math_utils import dot
 import numpy as np
@@ -37,7 +38,7 @@ class Neuron(NeuralComponent):
             return self.w + [self.b]
         return self.w
 
-    def forward(self, X):
+    def forward(self, X: list[ValueNode]) -> ValueNode:
         pre_activation = dot(X, self.w)
         if self.b:
             pre_activation += self.b
@@ -46,7 +47,7 @@ class Neuron(NeuralComponent):
 
 
 class NeuronLayer(NeuralComponent):
-    def __init__(self, input_size:int, output_size:int, activation:str='relu', include_bias:bool=True, loss:str='binary_cross_entropy'):
+    def __init__(self, input_size:int, output_size:int, activation:str='relu', include_bias:bool=True):
         self.neurons = [Neuron(input_size, activation, include_bias) for _ in range(output_size)]
     
     def parameters(self):
@@ -59,9 +60,7 @@ class NeuronLayer(NeuralComponent):
 class FeedForwardNetwork(NeuralComponent):
     def __init__(self, input_size:int, output_size:int):
         self.n_inputs = input_size
-        self.n_outputs = output_size
-        self.size: int = input_size * 4
-        self.layers = [NeuronLayer(input_size, self.size, 'relu'), NeuronLayer(self.size, output_size, 'linear')]
+        self.layers = [NeuronLayer(input_size, output_size * 4, 'relu'), NeuronLayer(output_size * 4, output_size, 'linear')]
 
     def parameters(self):
         return [p for layer in self.layers for p in layer.parameters()]

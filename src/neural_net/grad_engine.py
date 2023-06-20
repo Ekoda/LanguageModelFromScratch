@@ -58,11 +58,36 @@ class ValueNode:
         result_node._backward = _backward
         return result_node
 
+    def __abs__(self):
+        result_node = ValueNode(abs(self.data), (self,), 'abs')
+        def _backward():
+            self.gradient += (1 if self.data >= 0 else -1) * result_node.gradient
+        result_node._backward = _backward
+        return result_node
+
     def log(self):
         assert self.data > 0, "Logarithm not defined for zero or negative values."
         result_node = ValueNode(np.log(self.data), (self,), 'log')
         def _backward():
             self.gradient += (1 / self.data) * result_node.gradient
+        result_node._backward = _backward
+        return result_node
+
+    def sqrt(self):
+        assert self.data >= 0, "Square root is not defined for negative values."
+        result_node = ValueNode(np.sqrt(self.data), (self,), 'sqrt')
+        def _backward():
+            if self.data > 0:
+                self.gradient += (0.5 / np.sqrt(self.data)) * result_node.gradient
+            else:
+                self.gradient += 0
+        result_node._backward = _backward
+        return result_node
+
+    def exp(self):
+        result_node = ValueNode(np.exp(self.data), (self,), 'exp')
+        def _backward():
+            self.gradient += result_node.data * result_node.gradient
         result_node._backward = _backward
         return result_node
 
@@ -115,5 +140,18 @@ class ValueNode:
     def __rtruediv__(self, other):
         return other * (self ** -1)
 
+    def __format__(self, format_spec):
+        return format(self.data, format_spec)
+
     def __repr__(self):
         return f"ValueNode(data={self.data}, gradient={self.gradient})"
+
+    def __lt__(self, other):
+        if isinstance(other, ValueNode):
+            other = other.data
+        return self.data < other
+
+    def __gt__(self, other):
+        if isinstance(other, ValueNode):
+            other = other.data
+        return self.data > other
