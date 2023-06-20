@@ -6,6 +6,7 @@ from src.transformer.decoder import Decoder
 from src.neural_net.network import NeuronLayer
 from src.utils.math_utils import softmax, get_shape
 from src.utils.data_utils import find_next_word
+from src.utils.type_utils import Matrix
 
 
 class EssentialTransformer:
@@ -14,7 +15,7 @@ class EssentialTransformer:
         self.model_dimension: int = model_dimension
         self.vocabulary: dict[str, int] = build_vocab(tokenize(data)) # TODO: better tokenization
         self.reversed_vocabulary: dict[int, str] = {index: word for word, index in self.vocabulary.items()}
-        self.embeddings: list[list[float]] = generate_embeddings(len(self.vocabulary), model_dimension)
+        self.embeddings: Matrix = generate_embeddings(len(self.vocabulary), model_dimension)
         self.decoder_blocks = [Decoder(model_dimension, n_attention_heads) for _ in range(decoder_blocks)]
         self.output_layer = NeuronLayer(model_dimension, len(self.vocabulary), activation='linear')
 
