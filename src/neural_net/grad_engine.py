@@ -21,6 +21,7 @@ class ValueNode:
     Core methods:
     ensure_other_node(other): Checks if 'other' is a ValueNode instance, if not, it converts 'other' into a ValueNode instance.
     backward(): Performs a backward pass through the computation graph, computing and storing gradients along the way.
+    update(learning_rate): Updates the value of the node by subtracting the gradient multiplied by the learning rate.
 
     """
     def __init__(self, data: float, children: tuple = (), operation: str = ''):
@@ -118,6 +119,9 @@ class ValueNode:
         self.gradient = 1
         for node in reversed(ordered_nodes):
             node._backward()
+
+    def update(self, learning_rate):
+        self.data -= learning_rate * self.gradient
 
     def __neg__(self):
         return self * -1

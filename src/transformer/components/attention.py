@@ -1,17 +1,24 @@
 import numpy as np
 from src.utils.type_utils import Matrix
-from src.neural_net.network import NeuronLayer
+from src.neural_net.network import NeuronLayer, NeuralComponent
 from src.utils.math_utils import softmax, transpose, matmul, apply_elementwise
 from src.utils.attention_utils import mask_attention_scores
 from src.utils.generic_utils import print_matrix
 
-class MultiHeadAttention:
+class MultiHeadAttention(NeuralComponent):
     def __init__ (self, embedding_size: int, n_heads: int = 8, masked: bool = False):
         self.embedding_size: int = embedding_size
         self.n_heads: int = n_heads
         self.masked: bool = masked
         self.heads = [Head(embedding_size // n_heads, masked=masked) for _ in range(n_heads)]
         self.linear_layer = NeuronLayer(embedding_size, embedding_size, activation='linear', include_bias=False)
+
+    def parameters(self):
+        parameters = []
+        for head in self.heads:
+            parameters.extend(head.parameters())
+        parameters.extend(self.linear_layer.parameters())
+        return parameters
 
     def forward(self, X: Matrix) -> Matrix:
         embedding_split = np.split(np.array(X), self.n_heads, axis=-1)
@@ -21,13 +28,20 @@ class MultiHeadAttention:
         return linear_transformation
 
 
-class Head:
+class Head(NeuralComponent):
     def __init__ (self, size: int, masked: bool = False):
         self.size: int = size
         self.masked: bool = masked
         self.query_layer = NeuronLayer(size, size, activation='linear', include_bias=False)
         self.key_layer = NeuronLayer(size, size, activation='linear', include_bias=False)
         self.value_layer = NeuronLayer(size, size, activation='linear', include_bias=False)
+
+    def parameters(self):
+        parameters = []
+        parameters.extend(self.query_layer.parameters())
+        parameters.extend(self.key_layer.parameters())
+        parameters.extend(self.value_layer.parameters())
+        return parameters
 
     def forward(self, X: Matrix) -> Matrix:
         queries = [self.query_layer.forward(embedding) for embedding in X] # T, C 

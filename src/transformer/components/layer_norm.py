@@ -1,15 +1,19 @@
 import numpy as np
 from src.utils.type_utils import Matrix
 from src.neural_net.grad_engine import ValueNode
+from src.neural_net.network import NeuralComponent
 from src.utils.math_utils import mean, variance, get_shape, add, sub, apply_elementwise
 
 
-class LayerNorm:
+class LayerNorm(NeuralComponent):
     def __init__ (self, size: int):
         self.size = size
         self.gamma = [ValueNode(np.random.randn()) for _ in range(size)]
         self.beta = [ValueNode(np.random.randn()) for _ in range(size)]
         self.epsilon = 1e-6
+
+    def parameters(self):
+        return self.gamma + self.beta
 
     def _compute_means(self, X: Matrix) -> list[ValueNode]:
         return [mean(embedding) for embedding in X]

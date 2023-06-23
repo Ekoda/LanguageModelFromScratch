@@ -1,12 +1,12 @@
 import numpy as np
 from src.utils.type_utils import Matrix
 from src.transformer.components.attention import MultiHeadAttention
-from src.neural_net.network import NeuronLayer, FeedForwardNetwork
+from src.neural_net.network import NeuronLayer, FeedForwardNetwork, NeuralComponent
 from src.transformer.components.layer_norm import LayerNorm
 from src.utils.math_utils import add, get_shape
 
 
-class Decoder:
+class Decoder(NeuralComponent):
     def __init__(self, embedding_size: int, n_attention_heads: int = 8):
         self.embedding_size: int = embedding_size
         self.n_heads: int = n_attention_heads
@@ -14,6 +14,14 @@ class Decoder:
         self.masked_attention_norm = LayerNorm(embedding_size)
         self.feed_forward_network = FeedForwardNetwork(embedding_size, embedding_size)
         self.feed_forward_norm = LayerNorm(embedding_size)
+
+    def parameters(self):
+        parameters = []
+        parameters.extend(self.masked_attention.parameters())
+        parameters.extend(self.masked_attention_norm.parameters())
+        parameters.extend(self.feed_forward_network.parameters())
+        parameters.extend(self.feed_forward_norm.parameters())
+        return parameters
 
     def forward(self, X: Matrix) -> Matrix:
         attention_layer = self.masked_attention.forward(X)
