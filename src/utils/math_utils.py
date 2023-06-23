@@ -123,10 +123,14 @@ def mean(X: list[float]) -> float:
 def variance(X: list[float]) -> float:
     return sum((x - mean(X)) ** 2 for x in X) / len(X)
 
-def mean_squared_error(y_true: list[float], y_pred: list[float]) -> float:
-    assert len(y_true) == len(y_pred), "y_true and y_pred must have the same length"
-    assert len(y_true) != 0, "y_true and y_pred must not be empty"
-    return sum([(y - y_hat ) ** 2 for y, y_hat in zip(y_true, y_pred)]) / len(y_true)
+def sparse_categorical_crossentropy(y_pred: Matrix, y_true: list[int]) -> ValueNode:
+    assert len(y_pred) == len(y_true), "y_pred and y_true must have the same length"
+    total_loss = 0
+    for i in range(len(y_pred)):
+        ypi, yti = y_pred[i], y_true[i]
+        total_loss += -ypi[yti].log()
+    return total_loss / len(y_pred)
+    
 
 def get_shape(li) -> tuple[int, ...]:
     if not isinstance(li, list) or not li:
