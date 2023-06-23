@@ -1,12 +1,12 @@
 import numpy as np
-from src.transformer.components.embedding import generate_embeddings, get_token_embeddings
+from src.transformer.components.embedding import generate_embeddings, get_token_embeddings, Embedding
 from src.transformer.preprocessing.tokenization import tokenize, build_vocab
 from src.transformer.components.positional_encoding import encode_position
 from src.transformer.decoder import Decoder
 from src.neural_net.network import NeuronLayer, NeuralComponent
 from src.utils.math_utils import softmax, get_shape, sparse_categorical_crossentropy, mean
 from src.utils.data_utils import find_next_word, sequence_data
-from src.utils.type_utils import Matrix
+from src.utils.type_utils import Matrix, ValueNode
 
 
 class EssentialTransformer(NeuralComponent):
@@ -15,12 +15,13 @@ class EssentialTransformer(NeuralComponent):
         self.model_dimension: int = model_dimension
         self.vocabulary: dict[str, int] = build_vocab(tokenize(data)) # TODO: better tokenization
         self.reversed_vocabulary: dict[int, str] = {index: word for word, index in self.vocabulary.items()}
-        self.embeddings: Matrix = generate_embeddings(len(self.vocabulary), model_dimension) # TODO fix embeddings into a NeuralComponent class with own parameters
+        self.embedding: Matrix = Embedding(len(self.vocabulary), model_dimension)
         self.decoder_blocks = [Decoder(model_dimension, n_attention_heads) for _ in range(decoder_blocks)]
         self.output_layer = NeuronLayer(model_dimension, len(self.vocabulary), activation='linear')
 
-    def parameters(self):
+    def parameters(self) -> list[ValueNode]:
         parameters = []
+        parameters.extend(self.embedding.parameters())
         for decoder in self.decoder_blocks:
             parameters.extend(decoder.parameters())
         parameters.extend(self.output_layer.parameters())
@@ -42,11 +43,7 @@ class EssentialTransformer(NeuralComponent):
             print(f'epoch {epoch} loss: {mean(losses)}')
 
     def forward(self, X: str | list[str], temperature: float | None = None, training = False) -> str:
-        sequence_embeddings = get_token_embeddings(
-            self.embeddings,
-            self.vocabulary,
-            X if isinstance(X, list) else tokenize(X)
-            )
+        sequence_embeddings = self.embedding.forward(X if isinstance(X, list) else tokenize(X), self.vocabulary)
         positionally_encoded_embeddings = encode_position(sequence_embeddings)
         decoder_output = positionally_encoded_embeddings
         for decoder in self.decoder_blocks:

@@ -12,7 +12,7 @@ class LayerNorm(NeuralComponent):
         self.beta = [ValueNode(np.random.randn()) for _ in range(size)]
         self.epsilon = 1e-6
 
-    def parameters(self):
+    def parameters(self) -> list[ValueNode]:
         return self.gamma + self.beta
 
     def _compute_means(self, X: Matrix) -> list[ValueNode]:

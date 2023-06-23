@@ -1,7 +1,9 @@
 import numpy as np
 from src.neural_net.grad_engine import ValueNode
+from src.neural_net.network import NeuralComponent
+from src.utils.type_utils import Matrix
 
-def generate_embeddings(vocabulary_size: int, embedding_size: int) -> list[list[float]]:
+def generate_embeddings(vocabulary_size: int, embedding_size: int) -> Matrix:
     """
     Generates a matrix of initial embeddings for a vocabulary of given size and embedding dimension.
 
@@ -27,3 +29,15 @@ def get_token_embeddings(embeddings: list[list[float]], vocabulary: dict[str, in
         list[list[float]]: A matrix of shape (len(tokens), embedding_size) containing the embeddings for the tokens.
     """
     return [embeddings[vocabulary[token]] for token in tokens]
+
+class Embedding(NeuralComponent):
+    def __init__(self, vocabulary_size: int, embedding_size: int):
+        self.vocabulary_size = vocabulary_size
+        self.embedding_size = embedding_size
+        self.embeddings = generate_embeddings(vocabulary_size, embedding_size)
+
+    def parameters(self) -> list[ValueNode]:
+        return [p for row in self.embeddings for p in row]
+
+    def forward(self, tokens: list[str], vocabulary: dict[str, int]) -> Matrix:
+        return [self.embeddings[vocabulary[token]] for token in tokens]
