@@ -123,6 +123,11 @@ def mean(X: list[float]) -> float:
 def variance(X: list[float]) -> float:
     return sum((x - mean(X)) ** 2 for x in X) / len(X)
 
+def mean_squared_error(y_true: list[float], y_pred: list[float]) -> float:
+    assert len(y_true) == len(y_pred), "y_true and y_pred must have the same length"
+    assert len(y_true) != 0, "y_true and y_pred must not be empty"
+    return sum([(y - y_hat ) ** 2 for y, y_hat in zip(y_true, y_pred)]) / len(y_true)
+
 def get_shape(li) -> tuple[int, ...]:
     if not isinstance(li, list) or not li:
         return ()

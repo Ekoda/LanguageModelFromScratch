@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from src.utils.math_utils import sigmoid_activation, sigmoid_derivative, tanh_activation, tanh_derivative, softmax, dot, get_shape, add, transpose, matmul, apply_elementwise, np_softmax
+from src.utils.math_utils import *
 from src.neural_net.grad_engine import ValueNode
 
 
@@ -144,3 +144,16 @@ def test_apply_elementwise():
     operation = lambda x: x * 2
     expected = [[2, 4, 6], [8, 10, 12], [14, 16, 18]]
     assert apply_elementwise(matrix, operation) == expected
+
+def test_mean_squared_error():
+    assert mean_squared_error([1.0, 2.0, 3.0], [1.0, 2.0, 3.0]) == 0.0
+    assert mean_squared_error([1.0, 2.0, 3.0], [2.0, 3.0, 4.0]) == 1.0
+    assert mean_squared_error([1.0, 2.0, 3.0], [0.0, 0.0, 0.0]) == pytest.approx(4.666, 0.001)
+
+def test_mean_squared_error_different_lengths():
+    with pytest.raises(AssertionError):
+        mean_squared_error([1.0, 2.0, 3.0], [1.0, 2.0])
+
+def test_mean_squared_error_empty_lists():
+    with pytest.raises(AssertionError):
+        mean_squared_error([], [])
