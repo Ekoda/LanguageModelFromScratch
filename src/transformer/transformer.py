@@ -24,9 +24,9 @@ class EssentialTransformer(NeuralComponent):
             losses = []
             sequences = sequence_data(tokenize(X), sequence_length)
             for sequence in sequences:
-                predictions = self.forward(sequence[:sequence_length-1], training=True)
+                y_pred = self.forward(sequence[:sequence_length-1], training=True)
                 y_true = [self.vocabulary[word] for word in sequence[1:]]
-                loss = sparse_categorical_crossentropy(predictions, y_true)
+                loss = sparse_categorical_crossentropy(y_pred, y_true)
                 print(loss, sequence)
 
     def forward(self, X: str | list[str], temperature: float = None, training = False) -> str:

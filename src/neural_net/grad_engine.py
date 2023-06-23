@@ -144,7 +144,7 @@ class ValueNode:
         return format(self.data, format_spec)
 
     def __repr__(self):
-        return f"ValueNode(data={self.data}, gradient={self.gradient})"
+        return str(self.data)
 
     def __lt__(self, other):
         if isinstance(other, ValueNode):
