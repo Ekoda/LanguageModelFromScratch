@@ -11,8 +11,6 @@ The project is structured in a hierarchical and modular fashion according to the
 
 ---
 #### Requirements
-The aim with the project is to be as barebones as possible, using numpy only for mathematic operations. Even going as far as implementing tensor operations when needed. At one point building a tensor / linear algebra library for the grad engine was consider but was opted out of in order to stay on track.
-
 - Python 3.10 or later (Note: The '|' operator is used for typing, which was introduced in Python 3.10)
 
 Dependencies are listed in the `requirements.txt` file. To install these dependencies, navigate to the project directory and run the following command:
@@ -22,3 +20,5 @@ python -m venv env
 source env/bin/activate  # On Windows use `env\Scripts\activate`
 pip install -r requirements.txt
 ```
+
+The aim with the project is to be as barebones as possible, using numpy only for mathematic operations. Even going as far as implementing tensor operations when needed. At one point building a tensor / linear algebra library for the grad engine was consider but was opted out of in order to stay on track.
