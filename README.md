@@ -6,7 +6,7 @@ EssentialTransformer is an exploration into the intricate workings of the Transf
 To achieve this end the Transformer is broken down into its core components, each piece implemented separately.
 
 ---
-#### How to Use
+## How to Use
 The core component is the `EssentialTransformer` class, which handles all the intricacies of training and making predictions.
 
 ```python
@@ -22,11 +22,11 @@ prediction = model.forward("the quick brown fox jumps")
 ```
 
 ---
-#### Project Structure
+## Project Structure
 The project is structured in a hierarchical and modular fashion according to the original "attention is all you need" paper (Vaswani et al., 2017). As such the code in the components folder contain most of the detail, while code such as the model.py contain the transformer which ties all the pieces together. The neural_net folder contains a mini neural network library, complete with a grad engine which is really an extension of Andrej Karpathy's micrograd, for details I refer back to his brilliant material and repo at: https://github.com/karpathy/micrograd
 
 ---
-#### Requirements
+## Requirements
 - Python 3.10 or later
 
 Dependencies are listed in the `requirements.txt` file. To install these dependencies, navigate to the project directory and run the following command:
