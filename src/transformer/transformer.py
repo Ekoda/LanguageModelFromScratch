@@ -1,5 +1,5 @@
 import numpy as np
-from src.transformer.components.embedding import generate_embeddings, get_token_embeddings, Embedding
+from src.transformer.components.embedding import Embedding
 from src.transformer.preprocessing.tokenization import tokenize, build_vocab
 from src.transformer.components.positional_encoding import encode_position
 from src.transformer.decoder import Decoder

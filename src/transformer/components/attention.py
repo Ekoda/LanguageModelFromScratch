@@ -23,7 +23,7 @@ class MultiHeadAttention(NeuralComponent):
     def forward(self, X: Matrix) -> Matrix:
         embedding_split = np.split(np.array(X), self.n_heads, axis=-1)
         head_outputs = [head.forward(embedding_portion) for head, embedding_portion in zip(self.heads, embedding_split)]
-        concat = [x + y for x, y in zip(*head_outputs)]
+        concat = [x + y for x, y in zip(*head_outputs)] if self.n_heads > 1 else head_outputs[0]
         linear_transformation = [self.linear_layer.forward(embedding) for embedding in concat]
         return linear_transformation
 
