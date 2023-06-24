@@ -1,5 +1,5 @@
 from src.utils.generic_utils import load_text_data
-from src.transformer.transformer import EssentialTransformer
+from src.transformer.model import EssentialTransformer
 
 
 data = load_text_data(path="data/test.txt")
