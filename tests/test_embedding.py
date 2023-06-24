@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from src.transformer.preprocessing.tokenization import build_vocab
+from src.preprocessing.tokenization import build_vocab
 from src.transformer.components.embedding import generate_embeddings
 from src.utils.math_utils import get_shape
 

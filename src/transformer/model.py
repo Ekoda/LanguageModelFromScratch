@@ -1,6 +1,6 @@
 import numpy as np
 from src.transformer.components.embedding import Embedding
-from src.transformer.preprocessing.tokenization import tokenize, build_vocab
+from src.preprocessing.tokenization import tokenize, build_vocab
 from src.transformer.components.positional_encoding import encode_position
 from src.transformer.components.decoder import Decoder
 from src.neural_net.network import NeuronLayer, NeuralComponent
