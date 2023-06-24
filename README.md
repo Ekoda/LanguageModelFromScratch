@@ -18,7 +18,7 @@ model = EssentialTransformer(data, model_dimension=512, n_attention_heads=8, dec
 model.train(data, sequence_length=8, epochs=2)
 
 # Make predictions
-forward_pass = model.forward("the quick brown fox jumps")
+prediction = model.forward("the quick brown fox jumps")
 ```
 
 ---
