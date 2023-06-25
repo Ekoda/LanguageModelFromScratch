@@ -14,7 +14,7 @@ from src.utils.generic_utils import load_text_data
 from src.transformer.model import EssentialTransformer
 
 # Load data
-data = load_text_data(path="data/test.txt")
+data = load_text_data("data/test.txt")
 
 # Initialize and train the model
 model = EssentialTransformer(data, model_dimension=512, n_attention_heads=8, decoder_blocks=6)
