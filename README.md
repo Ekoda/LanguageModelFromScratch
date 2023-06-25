@@ -7,7 +7,7 @@ To achieve this end the Transformer is broken down into its core components, eac
 
 ---
 ## Example
-A concrete illustration of the transformer can be found in the `example.ipynb` notebook. You can find it in the main project directory. Here the model is trained on the sentence "The quick fox jumped over the lazy dog.", which it manages to predict perfectly. A fairly useless application, I admit but a proof of cocept nonetheless. Scaling the model up to 175 billion parameters with internet scale datasets is left as an exercise to the reader.
+A concrete illustration of the transformer can be found in the `example.ipynb` notebook. You can find it in the main project directory. Here the model is trained on the sentence "The quick fox jumped over the lazy dog.", which it manages to predict perfectly. A fairly useless application, I admit, but a proof of concept nonetheless. Scaling the model up to 175 billion parameters with internet scale datasets is left as an exercise to the reader.
 
 ---
 ## How to Use
