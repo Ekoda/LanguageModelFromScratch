@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class ValueNode:
     """
     The ValueNode class represents a node in a computational graph used for gradient-based optimization calculations.
@@ -30,10 +31,10 @@ class ValueNode:
         self.previous = set(children)
         self.operation = operation
         self._backward = lambda: None
-    
+
     def ensure_other_node(self, other):
         return other if isinstance(other, ValueNode) else ValueNode(other)
-        
+
     def __add__(self, other):
         other = self.ensure_other_node(other)
         result_node = ValueNode(self.data + other.data, (self, other), '+')

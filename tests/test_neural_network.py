@@ -6,7 +6,7 @@ from src.neural_net.grad_engine import ValueNode
 
 def test_Neuron():
     neuron = Neuron(input_size=3, activation='sigmoid')
-    
+ 
     assert len(neuron.parameters()) == 4  # 3 weights and 1 bias.
 
     X = [ValueNode(np.random.randn()) for _ in range(3)]
@@ -16,7 +16,7 @@ def test_Neuron():
 
 def test_NeuronLayer():
     layer = NeuronLayer(input_size=3, output_size=2, activation='relu')
-    
+
     assert len(layer.parameters()) == 8  # 2 neurons * (3 weights and 1 bias).
 
     X = [ValueNode(np.random.randn()) for _ in range(3)]

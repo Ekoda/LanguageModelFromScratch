@@ -1,7 +1,7 @@
 import numpy as np
 from src.utils.type_utils import Matrix
 from src.neural_net.grad_engine import ValueNode
-from src.utils.type_utils import Matrix
+
 
 def find_next_word(probabilities: Matrix, index_to_word: dict[int, str]) -> str:
     next_word_index = np.argmax(probabilities[-1])

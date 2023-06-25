@@ -2,6 +2,7 @@ import numpy as np
 from src.utils.type_utils import Matrix
 from src.utils.math_utils import get_shape
 
+
 def mask_attention_scores(scores: Matrix) -> Matrix:
     """
     Masks the upper triangular part of an attention score matrix, 

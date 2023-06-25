@@ -1,5 +1,4 @@
 import numpy as np
-
 from src.utils.math_utils import add
 from src.utils.type_utils import Matrix
 
@@ -43,4 +42,3 @@ def encode_position(sequence_embeddings: Matrix) -> Matrix:
     seq_len, d_model = len(sequence_embeddings), len(sequence_embeddings[0])
     encodings = sinusoidal_encodings(seq_len, d_model)
     return add(sequence_embeddings, encodings)
-

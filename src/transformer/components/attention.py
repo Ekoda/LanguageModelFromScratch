@@ -3,7 +3,7 @@ from src.utils.type_utils import Matrix
 from src.neural_net.network import NeuronLayer, NeuralComponent
 from src.utils.math_utils import softmax, transpose, matmul, apply_elementwise
 from src.utils.attention_utils import mask_attention_scores
-from src.utils.generic_utils import print_matrix
+
 
 class MultiHeadAttention(NeuralComponent):
     def __init__ (self, embedding_size: int, n_heads: int = 8, masked: bool = False):
@@ -49,7 +49,7 @@ class Head(NeuralComponent):
         values = [self.value_layer.forward(embedding) for embedding in X] # T, C
         raw_scores = matmul(queries, transpose(keys)) # T, T
         scores = apply_elementwise(raw_scores, lambda x: x / np.sqrt(self.size)) # T, T - normalized scores
-        if self.masked: 
+        if self.masked:
             scores = mask_attention_scores(scores) # T, T    
         softmax_scores = softmax(scores) # T, T
         weighted_values = matmul(softmax_scores, values) # T, C

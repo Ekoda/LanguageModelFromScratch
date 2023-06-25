@@ -1,6 +1,7 @@
 import pytest
 from src.utils.data_utils import *
 
+
 def test_sequence_even_data():
     tokens = ["the", "quick", "brown", "fox", "jumped", "over", "the", "lazy", "dog"]
     sequences = sequence_data(tokens, sequence_length=3)

@@ -13,7 +13,6 @@ def build_vocab(tokens: list[str]) -> dict[str, int]:
     sorted_unique_tokens = sorted(set(tokens))
     return {word: i for i, word in enumerate(sorted_unique_tokens)}
 
-
 def tokenize(text: str) -> list[str]:
     """
     Tokenizes a text into a list of tokens.

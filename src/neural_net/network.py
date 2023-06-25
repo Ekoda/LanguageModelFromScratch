@@ -1,7 +1,6 @@
-from src.utils.type_utils import Matrix
+import numpy as np
 from src.neural_net.grad_engine import ValueNode
 from src.utils.math_utils import dot
-import numpy as np
 
 
 class NeuralComponent:
@@ -49,7 +48,7 @@ class Neuron(NeuralComponent):
 class NeuronLayer(NeuralComponent):
     def __init__(self, input_size:int, output_size:int, activation:str='relu', include_bias:bool=True):
         self.neurons = [Neuron(input_size, activation, include_bias) for _ in range(output_size)]
-    
+
     def parameters(self):
         return [p for n in self.neurons for p in n.parameters()]
 

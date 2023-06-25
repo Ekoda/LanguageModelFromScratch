@@ -1,8 +1,7 @@
+import math
 import pytest
 import numpy as np
-import math
 from src.utils.attention_utils import mask_attention_scores
-from src.utils.type_utils import Matrix
 
 def isclose_matrix(a, b, rel_tol=1e-9):
     if a is None or b is None or len(a) != len(b):
@@ -36,13 +35,11 @@ def test_mask_single_column_matrix():
     assert mask_attention_scores(scores) == expected_output
 
 def test_mask_attention_scores_equivalence_to_numpy():
-    # Test 1: Check with 3x3 matrix
     scores = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
     masked_scores_list = mask_attention_scores(scores)
     masked_scores_numpy = np.array(scores) - np.triu(np.ones((3, 3)), k=1) * 1e10
     assert compare_numpy_array_and_list(masked_scores_numpy, masked_scores_list)
 
-    # Test 2: Check with 4x4 matrix
     scores = [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12], [13, 14, 15, 16]]
     masked_scores_list = mask_attention_scores(scores)
     masked_scores_numpy = np.array(scores) - np.triu(np.ones((4, 4)), k=1) * 1e10

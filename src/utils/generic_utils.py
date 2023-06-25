@@ -1,6 +1,7 @@
 from src.utils.type_utils import Matrix
 from src.utils.math_utils import get_shape
 
+
 def load_text_data(path: str) -> str:
     with open(path, 'r') as file:
         data = file.read()
@@ -26,3 +27,4 @@ def print_matrix(matrix: Matrix, num_decimals: int = 2) -> None:
         print()
     print("|" + " " * width + "|")
     print("└" + "─" * width + "┘")
+    
