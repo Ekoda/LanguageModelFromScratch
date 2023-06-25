@@ -1,8 +1,9 @@
 import numpy as np
-from src.utils.type_utils import Matrix
+
 from src.neural_net.network import NeuronLayer, NeuralComponent
-from src.utils.math_utils import softmax, transpose, matmul, apply_elementwise
 from src.utils.attention_utils import mask_attention_scores
+from src.utils.math_utils import softmax, transpose, matmul, apply_elementwise
+from src.utils.type_utils import Matrix
 
 
 class MultiHeadAttention(NeuralComponent):

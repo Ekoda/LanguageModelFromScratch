@@ -1,9 +1,10 @@
 import numpy as np
-from src.utils.type_utils import Matrix
-from src.transformer.components.attention import MultiHeadAttention
+
 from src.neural_net.network import FeedForwardNetwork, NeuralComponent
+from src.transformer.components.attention import MultiHeadAttention
 from src.transformer.components.layer_norm import LayerNorm
 from src.utils.math_utils import add
+from src.utils.type_utils import Matrix
 
 
 class Decoder(NeuralComponent):

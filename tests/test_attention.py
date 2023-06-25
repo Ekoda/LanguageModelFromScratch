@@ -1,9 +1,10 @@
-import pytest
 import numpy as np
+import pytest
+
 from src.transformer.components.attention import MultiHeadAttention, Head
-from src.utils.math_utils import softmax, get_shape, matmul, transpose
 from src.utils.attention_utils import mask_attention_scores
 from src.utils.data_utils import mock_matrix
+from src.utils.math_utils import softmax, get_shape, matmul, transpose
 
 
 def test_head_attention_shape():

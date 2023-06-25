@@ -1,11 +1,12 @@
 import numpy as np
-from src.transformer.components.embedding import Embedding
-from src.preprocessing.tokenization import tokenize, build_vocab
-from src.transformer.components.positional_encoding import encode_position
-from src.transformer.components.decoder import Decoder
+
 from src.neural_net.network import NeuronLayer, NeuralComponent
-from src.utils.math_utils import softmax, sparse_categorical_crossentropy, mean
+from src.preprocessing.tokenization import tokenize, build_vocab
+from src.transformer.components.decoder import Decoder
+from src.transformer.components.embedding import Embedding
+from src.transformer.components.positional_encoding import encode_position
 from src.utils.data_utils import find_next_word, sequence_data
+from src.utils.math_utils import softmax, sparse_categorical_crossentropy, mean
 from src.utils.type_utils import Matrix, ValueNode
 
 

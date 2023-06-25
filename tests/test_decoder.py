@@ -1,5 +1,6 @@
-import pytest
 import numpy as np
+import pytest
+
 from src.transformer.components.decoder import Decoder
 from src.utils.data_utils import mock_matrix
 from src.utils.math_utils import get_shape

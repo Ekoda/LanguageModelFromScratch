@@ -1,5 +1,3 @@
-
-
 def build_vocab(tokens: list[str]) -> dict[str, int]:
     """
     Builds a vocabulary from a list of tokens.

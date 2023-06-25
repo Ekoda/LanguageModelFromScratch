@@ -1,4 +1,5 @@
 import numpy as np
+
 from src.utils.math_utils import add
 from src.utils.type_utils import Matrix
 

@@ -1,5 +1,6 @@
-import pytest
 import numpy as np
+import pytest
+
 from src.neural_net.grad_engine import ValueNode
 
 

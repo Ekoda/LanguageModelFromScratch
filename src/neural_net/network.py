@@ -1,4 +1,5 @@
 import numpy as np
+
 from src.neural_net.grad_engine import ValueNode
 from src.utils.math_utils import dot
 

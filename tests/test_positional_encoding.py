@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+
 from src.transformer.components.positional_encoding import sinusoidal_encodings
 from src.utils.math_utils import get_shape
 

@@ -1,7 +1,8 @@
-import pytest
 import numpy as np
-from src.neural_net.network import FeedForwardNetwork, Neuron, NeuronLayer
+import pytest
+
 from src.neural_net.grad_engine import ValueNode
+from src.neural_net.network import FeedForwardNetwork, Neuron, NeuronLayer
 
 
 def test_Neuron():

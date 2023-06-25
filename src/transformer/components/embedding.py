@@ -1,4 +1,5 @@
 import numpy as np
+
 from src.neural_net.grad_engine import ValueNode
 from src.neural_net.network import NeuralComponent
 from src.utils.type_utils import Matrix

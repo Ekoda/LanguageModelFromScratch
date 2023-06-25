@@ -1,6 +1,7 @@
 import math
-import pytest
 import numpy as np
+import pytest
+
 from src.utils.attention_utils import mask_attention_scores
 
 def isclose_matrix(a, b, rel_tol=1e-9):

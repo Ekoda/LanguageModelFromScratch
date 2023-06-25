@@ -1,6 +1,7 @@
 import numpy as np
-from src.utils.type_utils import Matrix
+
 from src.utils.math_utils import get_shape
+from src.utils.type_utils import Matrix
 
 
 def mask_attention_scores(scores: Matrix) -> Matrix:

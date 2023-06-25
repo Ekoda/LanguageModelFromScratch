@@ -1,7 +1,8 @@
 import numpy as np
 import pytest
-from src.utils.math_utils import *
+
 from src.neural_net.grad_engine import ValueNode
+from src.utils.math_utils import *
 
 
 def test_sigmoid_activation():
