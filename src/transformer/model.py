@@ -6,7 +6,7 @@ from src.transformer.components.decoder import Decoder
 from src.transformer.components.embedding import Embedding
 from src.transformer.components.positional_encoding import encode_position
 from src.utils.data_utils import find_next_word, sequence_data
-from src.utils.math_utils import softmax, sparse_categorical_crossentropy, mean
+from src.utils.math_utils import softmax, sparse_categorical_crossentropy, mean, get_shape
 from src.utils.type_utils import Matrix, ValueNode
 
 
@@ -14,7 +14,7 @@ class EssentialTransformer(NeuralComponent):
     def __init__(self, data: str, model_dimension: int = 512, n_attention_heads: int = 8, decoder_blocks: int = 6):
         self.data: str = data
         self.model_dimension: int = model_dimension
-        self.vocabulary: dict[str, int] = build_vocab(tokenize(data)) # TODO: better tokenization
+        self.vocabulary: dict[str, int] = build_vocab(tokenize(data))
         self.reversed_vocabulary: dict[int, str] = {index: word for word, index in self.vocabulary.items()}
         self.embedding: Matrix = Embedding(len(self.vocabulary), model_dimension)
         self.decoder_blocks = [Decoder(model_dimension, n_attention_heads) for _ in range(decoder_blocks)]
@@ -28,7 +28,7 @@ class EssentialTransformer(NeuralComponent):
         parameters.extend(self.output_layer.parameters())
         return parameters
 
-    def train(self, X: str, sequence_length: int = 10, epochs: int = 1, learning_rate: float = 0.01):
+    def train(self, X: str, sequence_length: int = 10, epochs: int = 1, learning_rate: float = 0.05):
         for epoch in range(epochs):
             losses = []
             sequences = sequence_data(tokenize(X), sequence_length)
@@ -41,7 +41,8 @@ class EssentialTransformer(NeuralComponent):
                 loss.backward()
                 for p in self.parameters():
                     p.update(learning_rate)
-            print(f'epoch {epoch} loss: {mean(losses)}')
+            if epoch < 5 or (epoch + 1) % 50 == 0:
+                print(f"Epoch: {epoch + 1}, Loss: {mean(losses)}")
 
     def forward(self, X: str | list[str], temperature: float | None = None, training = False) -> str:
         sequence_embeddings = self.embedding.forward(X if isinstance(X, list) else tokenize(X), self.vocabulary)

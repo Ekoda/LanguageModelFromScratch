@@ -6,6 +6,10 @@ EssentialTransformer is an exploration into the intricate workings of the Transf
 To achieve this end the Transformer is broken down into its core components, each piece implemented separately.
 
 ---
+## Example
+A concrete illustration of the transformer can be found in the `example.ipynb` notebook. You can find it in the main project directory. Here the model is trained on the sentence "The quick fox jumped over the lazy dog.", which it manages to predict perfectly. A fairly useless application, I admit but a proof of cocept nonetheless. Scaling the model up to 175 billion parameters with internet scale datasets is left as an exercise to the reader.
+
+---
 ## How to Use
 The core component is the `EssentialTransformer` class, which handles all the intricacies of training and making predictions.
 
