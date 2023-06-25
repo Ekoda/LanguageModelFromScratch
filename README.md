@@ -10,6 +10,9 @@ To achieve this end the Transformer is broken down into its core components, eac
 The core component is the `EssentialTransformer` class, which handles all the intricacies of training and making predictions.
 
 ```python
+from src.utils.generic_utils import load_text_data
+from src.transformer.model import EssentialTransformer
+
 # Load data
 data = load_text_data(path="data/test.txt")
 
