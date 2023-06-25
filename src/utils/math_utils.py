@@ -1,29 +1,27 @@
 import numpy as np
 from src.utils.type_utils import Matrix, ValueNode
-from math import exp
 
 
-def sigmoid_activation(n: float) -> float:
-    return 1 / (1 + np.exp(-n))
-
+def sigmoid_activation(x: float) -> float:
+    return 1 / (1 + np.exp(-x))
 
 def sigmoid_derivative(sigmoid_output: float) -> float:
-        """
-        Calculate the derivative of the sigmoid function. d/d_sigmoid_output.
+    """
+    Calculate the derivative of the sigmoid function. d/d_sigmoid_output.
 
-        This function assumes that 'sigmoid_output' is the output of a sigmoid function.
-        The derivative of the sigmoid function is sigmoid_output * (1 - sigmoid_output).
+    This function assumes that 'sigmoid_output' is the output of a sigmoid function.
+    The derivative of the sigmoid function is sigmoid_output * (1 - sigmoid_output).
 
-        Args:
-            sigmoid_output (float): The output of the sigmoid function.
+    Args:
+        sigmoid_output (float): The output of the sigmoid function.
 
-        Returns:
-            float: The derivative of the sigmoid function at the corresponding input.
-        """
-        return  sigmoid_output * (1 - sigmoid_output)
+    Returns:
+        float: The derivative of the sigmoid function at the corresponding input.
+    """
+    return  sigmoid_output * (1 - sigmoid_output)
 
-def tanh_activation(n: float) -> float:
-    return np.tanh(n)
+def tanh_activation(x: float) -> float:
+    return np.tanh(x)
 
 def tanh_derivative(tanh_output: float) -> float:
     """
@@ -49,10 +47,10 @@ def matrix_sum(matrix: Matrix) -> ValueNode:
     return sum(sum(row) for row in matrix)
 
 def np_softmax(matrix: np.ndarray, temperature: float = None) -> np.ndarray:
-        if temperature is not None:
-            matrix = np.array(matrix) / temperature
-        e_x = np.exp(matrix - np.max(matrix))
-        return e_x / e_x.sum()
+    if temperature is not None:
+        matrix = np.array(matrix) / temperature
+    e_x = np.exp(matrix - np.max(matrix))
+    return e_x / e_x.sum()
 
 def softmax(matrix: Matrix, temperature: float = None) -> Matrix:
     """
@@ -84,7 +82,7 @@ def softmax(matrix: Matrix, temperature: float = None) -> Matrix:
     sum_e_x = matrix_sum(e_x)
     return apply_elementwise(e_x, lambda x: x / sum_e_x)
 
-def relu_activation(n: float) -> float:
+def relu_activation(x: float) -> float:
     """
     ReLU activation function.
 
@@ -94,8 +92,7 @@ def relu_activation(n: float) -> float:
     Returns:
         float: Activation of the input.
     """
-    return np.maximum(0, n)
-
+    return np.maximum(0, x)
 
 def relu_derivative(relu_output: float) -> float:
     """
@@ -112,7 +109,6 @@ def relu_derivative(relu_output: float) -> float:
     """
     return (relu_output > 0) * 1
 
-
 def dot(A: list[float], B: list[float]) -> float:
     assert len(A) == len(B), "Dot product requires arrays of the same length"
     return sum(a * b for a, b in zip(A, B))
@@ -123,14 +119,12 @@ def mean(X: list[float]) -> float:
 def variance(X: list[float]) -> float:
     return sum((x - mean(X)) ** 2 for x in X) / len(X)
 
-def sparse_categorical_crossentropy(y_pred: Matrix, y_true: list[int]) -> ValueNode:
-    assert len(y_pred) == len(y_true), "y_pred and y_true must have the same length"
+def sparse_categorical_crossentropy(y_preds: Matrix, y_trues: list[int]) -> ValueNode:
+    assert len(y_preds) == len(y_trues), "y_pred and y_true must have the same length"
     total_loss = 0
-    for i in range(len(y_pred)):
-        ypi, yti = y_pred[i], y_true[i]
-        total_loss += -ypi[yti].log()
-    return total_loss / len(y_pred)
-    
+    for y_pred, y_true in zip(y_preds, y_trues):
+        total_loss += -y_pred[y_true].log()
+    return total_loss / len(y_preds)
 
 def get_shape(li) -> tuple[int, ...]:
     if not isinstance(li, list) or not li:

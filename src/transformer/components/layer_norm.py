@@ -2,7 +2,7 @@ import numpy as np
 from src.utils.type_utils import Matrix
 from src.neural_net.grad_engine import ValueNode
 from src.neural_net.network import NeuralComponent
-from src.utils.math_utils import mean, variance, get_shape, add, sub, apply_elementwise
+from src.utils.math_utils import mean, variance
 
 
 class LayerNorm(NeuralComponent):
