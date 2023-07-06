@@ -11,7 +11,7 @@ class MultiHeadAttention(NeuralComponent):
         self.embedding_size: int = embedding_size
         self.n_heads: int = n_heads
         self.masked: bool = masked
-        self.heads = [Head(embedding_size // n_heads, masked=masked) for _ in range(n_heads)]
+        self.heads = [Head(embedding_size, embedding_size // n_heads, masked=masked) for _ in range(n_heads)]
         self.linear_layer = NeuronLayer(embedding_size, embedding_size, activation='linear', include_bias=False)
 
     def parameters(self):
@@ -22,20 +22,19 @@ class MultiHeadAttention(NeuralComponent):
         return parameters
 
     def forward(self, X: Matrix) -> Matrix:
-        embedding_split = np.split(np.array(X), self.n_heads, axis=-1)
-        head_outputs = [head.forward(embedding_portion) for head, embedding_portion in zip(self.heads, embedding_split)]
+        head_outputs = [head.forward(X) for head in self.heads]
         concat = [x + y for x, y in zip(*head_outputs)] if self.n_heads > 1 else head_outputs[0]
         linear_transformation = [self.linear_layer.forward(embedding) for embedding in concat]
         return linear_transformation
 
 
 class Head(NeuralComponent):
-    def __init__ (self, size: int, masked: bool = False):
-        self.size: int = size
+    def __init__ (self, embedding_size: int, head_size: int, masked: bool = False):
+        self.head_size: int = head_size
         self.masked: bool = masked
-        self.query_layer = NeuronLayer(size, size, activation='linear', include_bias=False)
-        self.key_layer = NeuronLayer(size, size, activation='linear', include_bias=False)
-        self.value_layer = NeuronLayer(size, size, activation='linear', include_bias=False)
+        self.query_layer = NeuronLayer(embedding_size, head_size, activation='linear', include_bias=False)
+        self.key_layer = NeuronLayer(embedding_size, head_size, activation='linear', include_bias=False)
+        self.value_layer = NeuronLayer(embedding_size, head_size, activation='linear', include_bias=False)
 
     def parameters(self):
         parameters = []
@@ -49,7 +48,7 @@ class Head(NeuralComponent):
         keys = [self.key_layer.forward(embedding) for embedding in X] # T, C
         values = [self.value_layer.forward(embedding) for embedding in X] # T, C
         raw_scores = matmul(queries, transpose(keys)) # T, T
-        scores = apply_elementwise(raw_scores, lambda x: x / np.sqrt(self.size)) # T, T - normalized scores
+        scores = apply_elementwise(raw_scores, lambda x: x / np.sqrt(self.head_size)) # T, T - normalized scores
         if self.masked:
             scores = mask_attention_scores(scores) # T, T    
         softmax_scores = softmax(scores) # T, T
