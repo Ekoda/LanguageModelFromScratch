@@ -1,5 +1,5 @@
-# LLM from Scratch
-An LLM from scratch, built in order to explore and understand the Transformer model, specifically a fully functional decoder for next-word prediction, similar to GPT. This model is implemented with backpropagation, enabling actual training, albeit at a very slow pace. The focus is on clarity and education rather than optimization
+# Language Model from Scratch
+A Language Model built from scratch, in order to explore and understand the Transformer model, specifically a fully functional decoder for next-word prediction, similar to GPT. This model is implemented with backpropagation, enabling actual training, albeit at a very slow pace. The focus is on clarity and education rather than optimization
 
 ---
 ## Example
