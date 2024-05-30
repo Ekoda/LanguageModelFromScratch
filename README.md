@@ -1,9 +1,5 @@
-# EssentialTransformer
-The Transformer model has revolutionized the field of natural language processing, enabling state-of-the-art results in tasks like translation, summarization, and much more.
-
-EssentialTransformer is an exploration into the intricate workings of the Transformer model. A fully functional decoder only next word prediction model in the style of GPT, built entirely from scratch. This project is all about building intuition and understanding of the fundamental concepts that underpin the Transformer architecture. The focus is not to be the fastest or most optimized model. Instead its aim is to be clear and educational for those wanting to understand the technical details of how transformers work.
-
-To achieve this end the Transformer is broken down into its core components, each piece implemented separately.
+# LLM from Scratch
+An LLM from scratch, built in order to explore and understand the Transformer model, specifically a fully functional decoder for next-word prediction, similar to GPT. This model is implemented with backpropagation, enabling actual training, albeit at a very slow pace. The focus is on clarity and education rather than optimization
 
 ---
 ## Example
